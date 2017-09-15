@@ -12,9 +12,9 @@ print "Database version : %s " % data
 testUserFirstName = "firstname"
 testUserLastName = "lastname"
 testUserClass = "testclass"
-cardId = "1623232524";
+cardId = 1623232524;
 
-userString =" (" + cardId + ",'" + testUserFirstName + "', '" + testUserLastName \
+userString =" (" + str(cardId) + ",'" + testUserFirstName + "', '" + testUserLastName \
 + "', '" + testUserClass + "');"
 
 dbConnection.insertUser(userString)
