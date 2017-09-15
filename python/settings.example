@@ -1,0 +1,11 @@
+import os
+
+def init():
+    global userName
+    userName = "example_user"
+    global password
+    password = "example_password"
+    global dbName
+    dbName = "your_db_name"
+    global host
+    host = "localhost"

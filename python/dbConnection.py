@@ -1,15 +1,13 @@
 import MySQLdb
+import settings
 #from user import User
-
-userName = "ExampleUser"
-passWord = "yourPassword"
-dbName = "DB_NAME"
-location = "localhost"
 
 # assumes there excists a USER table with fields
 # id (auto increment), firstname, lastname, class name
 
-db = MySQLdb.connect(location,userName,passWord,dbName)
+settings.init()
+
+db = MySQLdb.connect(settings.host,settings.userName,settings.password,settings.dbName)
 cursor = db.cursor()
 
 def getVersion():
