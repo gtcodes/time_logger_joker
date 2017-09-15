@@ -12,8 +12,9 @@ print "Database version : %s " % data
 testUserFirstName = "firstname"
 testUserLastName = "lastname"
 testUserClass = "testclass"
+cardId = "1623232524";
 
-userString = " ('" + testUserFirstName + "', '" + testUserLastName \
+userString =" (" + cardId + ",'" + testUserFirstName + "', '" + testUserLastName \
 + "', '" + testUserClass + "');"
 
 dbConnection.insertUser(userString)
@@ -23,4 +24,5 @@ compareDbResults('first name', testUserFirstName, data[1])
 compareDbResults('last name', testUserLastName, data[2])
 compareDbResults('class name', testUserClass, data[3])
 dbConnection.deleteUser(data[0])
+dbConnection.startTime(str(data[0]))
 dbConnection.close()

@@ -16,8 +16,12 @@ def getVersion():
 
 #' values should be comma seperated
 def insertUser(user):
-    insertQuery = "INSERT INTO USER(FIRST_NAME,LAST_NAME, CLASS) VALUES"
+    insertQuery = "INSERT INTO USER(CARD_ID,FIRST_NAME,LAST_NAME, CLASS) VALUES"
     insertQuery = insertQuery + user
+    commit(insertQuery)
+
+def startTime(cardId):
+    insertQuery = "INSERT INTO TIMELOG(CARD_ID,START_TIME) VALUES (" + cardId + ", NOW());"
     commit(insertQuery)
 
 #TODO refactor select to be less duplicated
