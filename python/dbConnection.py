@@ -16,18 +16,18 @@ def getVersion():
 
 #' values should be comma seperated
 def insertUser(user):
-    insertQuery = "INSERT INTO USER(CARD_ID,FIRST_NAME,LAST_NAME, CLASS) VALUES"
+    insertQuery = "INSERT INTO USER(CARD_ID, FIRST_NAME, LAST_NAME, CLASS) VALUES"
     insertQuery = insertQuery + user
     commit(insertQuery)
 
 def startTime(cardId):
-    insertQuery = "INSERT INTO TIMELOG(CARD_ID,START_TIME) VALUES (" + cardId + ", NOW());"
+    insertQuery = "INSERT INTO TIMELOG(CARD_ID, START_TIME) VALUES (" + cardId + ", NOW());"
     commit(insertQuery)
 
 #TODO refactor select to be less duplicated
-def selectUserById(userID):
+def selectUserById(cardID):
     selectQuery = "SELECT * FROM USER\
-          WHERE ID = %d" % (userID)
+          WHERE ID = %d" % (cardID)
     try:
        # Execute the SQL command
        cursor.execute(selectQuery)
@@ -47,16 +47,27 @@ def selectUserByName(firstName, lastName):
        result = cursor.fetchone()
        return(result)
     except:
-       print "Error: unable to fecth data"
+        print "Error: unable to fetch user by name: " \
+                + firstName + " " + lastName
 
-def update():
-    raise NotImplementedError
+def selectTimeLog(cardId):
+    selectQuery = "SELECT * FROM TIMELOG WHERE CARD_ID = "\
+            + str(cardId) + " ORDER BY START_TIME DESC;"
+    try:
+        cursor.execute(selectQuery)
+        result = cursor.fetchone()
+        return(result)
+    except:
+        print "Error: unable to fetch timeLog from user " + str(cardId)
+
+def updateTimeLog(logId):
+    updateQuery = "update TIMELOG set END_TIME = NOW() where ID = "\
+            + logId + ";"
+    commit(updateQuery)
 
 def deleteClass(className):
-    raise NotImplementedError
-    
-    #deleteQuery = "DELETE FROM USERS WHERE CLASS = '%d'" % (className)
-    #commit(deleteQuery)
+    deleteQuery = "DELETE FROM USER WHERE CLASS = " + className + ";"
+    commit(deleteQuery)
 
 def deleteUser(userID):
     deleteQuery = "DELETE FROM USER WHERE CARD_ID = %d" % (userID)

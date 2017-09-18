@@ -1,5 +1,3 @@
-import os
-
 def init():
     global userName
     userName = "example_user"
