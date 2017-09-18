@@ -27,7 +27,7 @@ def startTime(cardId):
 #TODO refactor select to be less duplicated
 def selectUserById(cardID):
     selectQuery = "SELECT * FROM USER\
-          WHERE ID = %d" % (cardID)
+          WHERE CARD_ID = %d" % (userID)
     try:
        # Execute the SQL command
        cursor.execute(selectQuery)

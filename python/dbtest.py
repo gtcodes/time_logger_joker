@@ -14,6 +14,7 @@ testUserLastName = "lastname"
 testUserClass = "testclass"
 cardId = 16232
 
+
 userString =" (" + str(cardId) + ",'" + testUserFirstName + "', '" + testUserLastName \
 + "', '" + testUserClass + "');"
 
