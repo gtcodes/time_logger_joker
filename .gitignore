@@ -1,6 +1,7 @@
 #project specific
 settings.py
 TODO
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
