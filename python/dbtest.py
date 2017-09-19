@@ -30,5 +30,6 @@ dbConnection.startTime(str(data[0]))
 log = dbConnection.selectTimeLog(str(cardId))
 dbConnection.updateTimeLog(str(log[0]))
 
+dbConnection.deleteOldTimeLogs(1)
 dbConnection.deleteUser(data[0])
 dbConnection.close()

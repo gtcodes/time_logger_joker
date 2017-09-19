@@ -73,6 +73,10 @@ def deleteUser(userID):
     deleteQuery = "DELETE FROM USER WHERE CARD_ID = %d" % (userID)
     commit(deleteQuery)
 
+def deleteOldTimeLogs(minutes):
+    deleteQuery = "DELETE FROM TIMELOG WHERE END_TIME IS NULL AND START_TIME < DATE_ADD(NOW(), INTERVAL -" + str(minutes) + " MINUTE);"
+    commit(deleteQuery)
+
 def commit(query):
     try:
         cursor.execute(query)
