@@ -27,7 +27,7 @@ compareDbResults('last name', testUserLastName, data[2])
 compareDbResults('class name', testUserClass, data[3])
 
 dbConnection.startTime(str(data[0]))
-log = dbConnection.selectTimeLog("16232")
+log = dbConnection.selectTimeLog(str(cardId))
 dbConnection.updateTimeLog(str(log[0]))
 
 dbConnection.deleteUser(data[0])
