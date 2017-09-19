@@ -27,13 +27,13 @@ def startTime(cardId):
 #TODO refactor select to be less duplicated
 def selectUserById(cardID):
     selectQuery = "SELECT * FROM USER\
-          WHERE CARD_ID = %d" % (userID)
+          WHERE CARD_ID = %d" % (cardID)
     try:
-       # Execute the SQL command
-       cursor.execute(selectQuery)
-       # Fetch all the rows in a list of lists.
-       result = cursor.fetchone()
-       return(result)
+        # Execute the SQL command
+        cursor.execute(selectQuery)
+        # Fetch all the rows in a list of lists.
+        result = cursor.fetchone()
+        return(result)
     except:
        print "Error: unable to fecth data"
     
