@@ -15,9 +15,12 @@ def getVersion():
     return(cursor.fetchone())
 
 #' values should be comma seperated
-def insertUser(user):
-    insertQuery = "INSERT INTO USER(CARD_ID, FIRST_NAME, LAST_NAME, CLASS) VALUES"
-    insertQuery = insertQuery + user
+def insertUser(cardID, firstName, lastName, className):
+    insertQuery = "INSERT INTO USER(CARD_ID, FIRST_NAME, LAST_NAME, CLASS) VALUES("
+    insertQuery += cardID + ","
+    insertQuery += "\"" + firstName + "\","
+    insertQuery += "\"" + lastName + "\","
+    insertQuery += "\"" + className + "\")"
     commit(insertQuery)
 
 def startTime(cardId):
