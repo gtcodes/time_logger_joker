@@ -10,13 +10,15 @@ def readId():
     if (cmd == 't'):
         logTime()
     elif (cmd == 'r'):
-        register()
-    elif (cmd == 'e'):
-        edit()
+        registerUser()
+    #elif (cmd == 'e'):
+    #    editUser()
+    #elif (cmd == 's'):
+    #    status()
     else:
         print "\nCommand not recognized, please try again\n\n"
 
-def register():
+def registerUser():
     cardID = raw_input("Enter cardID/scan card:") 
     firstName = raw_input("Enter first name:")
     lastName = raw_input("Enter last name:")
