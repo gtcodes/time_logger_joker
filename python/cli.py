@@ -2,15 +2,19 @@ import dbConnection as db
 from datetime import datetime
 
 def readId():
-    uid = input("Enter a user ID:")
-    
-    try:
-
-        logTime(uid)
-
-    except TypeError as e: 
-        print e.message
-        print "No user with that card ID"
+    cmd = raw_input("What would you like to do?\n"+
+                " t - Log time\n" + 
+                " r - Register a new user\n" +
+                " e - Edit a user\n")
+   
+    if (cmd == 't'):
+        logTime()
+    elif (cmd == 'r'):
+        register()
+    elif (cmd == 'e'):
+        edit()
+    else:
+        print "\nCommand not recognized, please try again\n\n"
 
 def logTime(uid):
     (cardID, first_name, last_name, _) = db.selectUserById(uid)
