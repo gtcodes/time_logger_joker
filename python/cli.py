@@ -2,21 +2,25 @@ import dbConnection as db
 from datetime import datetime
 
 def readId():
-    cmd = raw_input("What would you like to do?\n"+
-                " t - Log time\n" + 
-                " r - Register a new user\n" +
-                " e - Edit a user\n")
-   
-    if (cmd == 't'):
-        logTime()
-    elif (cmd == 'r'):
-        registerUser()
-    #elif (cmd == 'e'):
-    #    editUser()
-    #elif (cmd == 's'):
-    #    status()
-    else:
-        print "\nCommand not recognized, please try again\n\n"
+    while(1):
+        cmd = raw_input("What would you like to do?\n"+
+                    " t - Log time\n" + 
+                    " r - Register a new user\n" +
+                    " e - Edit a user\n" +
+                    " q - Quit\n")
+    
+        if (cmd == 't'):
+            logTime()
+        elif (cmd == 'r'):
+            registerUser()
+        #elif (cmd == 'e'):
+        #    editUser()
+        #elif (cmd == 's'):
+        #    status()
+        elif (cmd == 'q'):
+            return
+        else:
+            print "\nCommand not recognized, please try again\n\n"
 
 def registerUser():
     cardID = raw_input("Enter cardID/scan card:") 
@@ -54,8 +58,10 @@ def logTime():
         except TypeError as e: 
             print e.message
             print "No user with that card ID"
+            choice = raw_input("Would you like to register a new user? (y/n)")
+            if (choice == "y"):
+                registerUser()
 
 if __name__ == "__main__":
     print "Joker time logger v0.1"
-    while(1):
-        readId()
+    readId()
