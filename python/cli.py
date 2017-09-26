@@ -33,7 +33,9 @@ def readId():
         #elif (cmd == 's'):
         #    status()
         elif (cmd == 'q'):
-            return
+            print "bye :)"
+            time.sleep(0.5)
+            sys.exit(0)
         else:
             print "\nCommand not recognized, please try again\n\n"
 
