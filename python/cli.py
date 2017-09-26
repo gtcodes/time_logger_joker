@@ -1,5 +1,20 @@
 import dbConnection as db
 from datetime import datetime
+import sys
+import time
+import getpass
+
+ADMIN_PASS = "joker"
+
+def login():
+    while(1):
+        cardID = getpass.getpass("Card id: ")
+        try: 
+            (_,_,_,_,admin) = db.selectUserById(int(cardID))
+            if (admin and getpass.getpass("Password: ") == ADMIN_PASS): #LAZY POWAAA
+                readId()
+        except TypeError:
+            print "Please try again"
 
 def readId():
     while(1):
@@ -39,7 +54,7 @@ def logTime():
         
         uid = int(uid)
         try:
-            (cardID, first_name, last_name, _) = db.selectUserById(uid)
+            (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
             timelog = db.selectTimeLog(cardID)
             if (timelog is not None):
                 logID, _, starttime, endtime = timelog
@@ -64,4 +79,5 @@ def logTime():
 
 if __name__ == "__main__":
     print "Joker time logger v0.1"
-    readId()
+    login()
+    #readId()

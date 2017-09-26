@@ -18,7 +18,7 @@ cardId = 16232
 userString =" (" + str(cardId) + ",'" + testUserFirstName + "', '" + testUserLastName \
 + "', '" + testUserClass + "');"
 
-dbConnection.insertUser(userString)
+dbConnection.insertUser(str(cardId), testUserFirstName, testUserLastName, testUserClass)
 
 data = dbConnection.selectUserByName(testUserFirstName, testUserLastName)
 print "fetched a user by name : " + data[1]
