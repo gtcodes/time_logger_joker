@@ -68,6 +68,18 @@ def updateTimeLog(logId):
             + logId + ";"
     commit(updateQuery)
 
+def updateUser(userID, first_name, last_name, class_name, is_admin):
+    print type(userID), type(is_admin)
+    updateQuery = "update USER set FIRST_NAME='%s', LAST_NAME='%s', CLASS='%s',\
+         IS_ADMIN=%d where CARD_ID=%d" % (first_name, last_name, class_name, is_admin, userID)
+    # updateQuery = "update USER set FIRST_NAME=" + first_name \
+    #                 + " LAST_NAME=" + last_name \
+    #                 + " CLASS=" + class_name \
+    #                 + " IS_ADMIN=" + str(is_admin) \
+    #                 + " where CARD_ID=" + str(userID) + ";"
+    print(updateQuery)
+    commit(updateQuery)
+
 def deleteClass(className):
     deleteQuery = "DELETE FROM USER WHERE CLASS = " + className + ";"
     commit(deleteQuery)

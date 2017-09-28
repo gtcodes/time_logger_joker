@@ -28,8 +28,8 @@ def readId():
             logTime()
         elif (cmd == 'r'):
             registerUser()
-        #elif (cmd == 'e'):
-        #    editUser()
+        elif (cmd == 'e'):
+            editUser()
         #elif (cmd == 's'):
         #    status()
         elif (cmd == 'q'):
@@ -38,6 +38,33 @@ def readId():
             sys.exit(0)
         else:
             print "\nCommand not recognized, please try again\n\n"
+
+def editUser():
+    cardID = raw_input("Enter cardID for the user to edit:")
+    print(cardID)
+    try:
+        (cardID, first_name, last_name, class_name, is_admin) = db.selectUserById(int(cardID))
+        fninp = raw_input("First name(" + first_name + "): ")
+        lninp = raw_input("Last name(" + last_name + "): ")
+        cninp = raw_input("Class name(" + class_name + "): ")
+        adinp = raw_input("Admin (" + str(bool(is_admin)) + "): ")
+        first_name = fninp if fninp != '' else first_name
+        last_name = lninp if lninp != '' else last_name
+        class_name = cninp if cninp != '' else class_name
+        is_admin = adinp if adinp != '' else is_admin
+
+        print first_name, last_name, class_name, is_admin
+        db.updateUser(int(cardID), first_name, last_name, class_name, int(is_admin))
+
+        print("User updated with the following information")
+        print("    CardID: " + str(cardID))
+        print("      Name: " + first_name)
+        print("  LastName: " + last_name)
+        print("     Class: " + class_name)
+        print("     Admin: " + str(is_admin))
+    except TypeError as e:
+        print(e.message)
+        print("User not found")
 
 def registerUser():
     cardID = raw_input("Enter cardID/scan card:") 
