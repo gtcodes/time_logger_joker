@@ -50,6 +50,8 @@ def selectUserByName(firstName, lastName):
     selectQuery = "SELECT * FROM USER" + \
             " WHERE FIRST_NAME = '%s' AND LAST_NAME = '%s'" \
             % (firstName, lastName)
+    if(DEBUG):
+        print(selectQuery)
     try:
        # Execute the SQL command
        cursor.execute(selectQuery)
@@ -63,6 +65,8 @@ def selectUserByName(firstName, lastName):
 def selectTimeLog(cardId):
     selectQuery = "SELECT * FROM TIMELOG WHERE CARD_ID = "\
             + str(cardId) + " ORDER BY START_TIME DESC;"
+    if(DEBUG):
+        print(selectQuery)
     try:
         cursor.execute(selectQuery)
         result = cursor.fetchone()
@@ -83,6 +87,11 @@ def getTotalTimeOfUser(cardId):
 def updateTimeLog(logId):
     updateQuery = "update TIMELOG set END_TIME = NOW() where ID = "\
             + logId + ";"
+    commit(updateQuery)
+
+def updateUser(userID, first_name, last_name, class_name, is_admin):
+    updateQuery = "update USER set FIRST_NAME='%s', LAST_NAME='%s', CLASS='%s',\
+         IS_ADMIN=%d where CARD_ID=%d" % (first_name, last_name, class_name, is_admin, userID)
     commit(updateQuery)
 
 def deleteClass(className):
