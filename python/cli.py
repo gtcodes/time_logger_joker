@@ -20,12 +20,19 @@ def readId():
         print "\nCommand not recognized, please try again\n\n"
 
 def register():
-    cardID = raw_input("Enter cardID/scan card:") 
+    cardID = raw_input("Enter cardID/scan card:")
     firstName = raw_input("Enter first name:")
     lastName = raw_input("Enter last name:")
     className = raw_input("Enter class:")
-    
-    db.insertUser(cardID, firstName, lastName, className)
+    cleanedCardID = pruneCardIdInput(cardID)
+    db.insertUser(cleanedCardID, firstName, lastName, className)
+
+def pruneCardIdInput(number):
+    numberLength = len(number)
+    if(numberLength > 9):
+        numberLength = 9;
+    number = number[0:numberLength]
+    return toDecimalNumber(number)
 
 def logTime():
     while(1):
@@ -34,7 +41,8 @@ def logTime():
         if uid == 'q':
             break
         
-        uid = int(uid)
+        uid = pruneCardIdInput(uid)
+
         try:
             (cardID, first_name, last_name, _) = db.selectUserById(uid)
             timelog = db.selectTimeLog(cardID)
@@ -55,6 +63,11 @@ def logTime():
         except TypeError as e: 
             print e.message
             print "No user with that card ID"
+
+def toDecimalNumber(number):
+    if(number.isdigit()):
+        return number;
+    return str(int(number,16))
 
 if __name__ == "__main__":
     print "Joker time logger v0.1"

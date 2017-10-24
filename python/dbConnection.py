@@ -9,6 +9,7 @@ settings.init()
 
 db = MySQLdb.connect(settings.host,settings.userName,settings.password,settings.dbName)
 cursor = db.cursor()
+DEBUG = True
 
 def getVersion():
     cursor.execute("SELECT VERSION()")
@@ -16,21 +17,26 @@ def getVersion():
 
 #' values should be comma seperated
 def insertUser(cardID, firstName, lastName, className):
-    insertQuery = "INSERT INTO USER(CARD_ID, FIRST_NAME, LAST_NAME, CLASS) VALUES("
-    insertQuery += cardID + ","
-    insertQuery += "\"" + firstName + "\","
-    insertQuery += "\"" + lastName + "\","
-    insertQuery += "\"" + className + "\")"
+    insertQuery = "INSERT INTO USER(CARD_ID, FIRST_NAME, "+ \
+                "LAST_NAME, CLASS) VALUES(" + \
+                 cardID + "," + \
+                 "\"" + firstName + "\","+ \
+                 "\"" + lastName + "\","+ \
+                 "\"" + className + "\")"
+    if(DEBUG):
+        print(insertQuery)
     commit(insertQuery)
 
 def startTime(cardId):
-    insertQuery = "INSERT INTO TIMELOG(CARD_ID, START_TIME) VALUES (" + cardId + ", NOW());"
+    insertQuery = "INSERT INTO TIMELOG(CARD_ID, START_TIME) " +\
+            "VALUES (" + cardId + ", NOW());"
     commit(insertQuery)
 
 #TODO refactor select to be less duplicated
 def selectUserById(cardID):
-    selectQuery = "SELECT * FROM USER\
-          WHERE CARD_ID = %d" % (cardID)
+    selectQuery = "SELECT * FROM USER WHERE CARD_ID = " + cardID
+    if(DEBUG):
+        print(selectQuery)
     try:
         # Execute the SQL command
         cursor.execute(selectQuery)
@@ -41,8 +47,9 @@ def selectUserById(cardID):
        print "Error: unable to fecth data"
     
 def selectUserByName(firstName, lastName):
-    selectQuery = "SELECT * FROM USER\
-           WHERE FIRST_NAME = '%s' AND LAST_NAME = '%s'" % (firstName, lastName)
+    selectQuery = "SELECT * FROM USER" + \
+            " WHERE FIRST_NAME = '%s' AND LAST_NAME = '%s'" \
+            % (firstName, lastName)
     try:
        # Execute the SQL command
        cursor.execute(selectQuery)
@@ -63,6 +70,16 @@ def selectTimeLog(cardId):
     except:
         print "Error: unable to fetch timeLog from user " + str(cardId)
 
+def getTotalTimeOfUser(cardId):
+    selectQuery = "SELECT * FROM TIMELOG WHERE CARD_ID = " + str(cardId) + ";"
+    try:
+        cursor.execute(selectQuery)
+        result = cursor.fetchall();
+        print result
+        return result
+    except:
+        print "Error: unable to fetch all timelogs from user " + str(cardId)
+    
 def updateTimeLog(logId):
     updateQuery = "update TIMELOG set END_TIME = NOW() where ID = "\
             + logId + ";"
