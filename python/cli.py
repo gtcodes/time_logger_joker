@@ -5,7 +5,8 @@ def readId():
     cmd = raw_input("What would you like to do?\n"+
                 " t - Log time\n" + 
                 " r - Register a new user\n" +
-                " e - Edit a user\n")
+                " e - Edit a user\n" +
+                " q - to quit\n")
    
     if (cmd == 't'):
         logTime()
@@ -13,6 +14,8 @@ def readId():
         register()
     elif (cmd == 'e'):
         edit()
+    elif (cmd == 'q'):
+        exit()
     else:
         print "\nCommand not recognized, please try again\n\n"
 
