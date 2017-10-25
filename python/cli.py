@@ -25,7 +25,7 @@ def readId():
                     " q - Quit\n")
     
         if (cmd == 't'):
-            logTime()
+            timeLoggingLoop()
         elif (cmd == 'r'):
             registerUser()
         elif (cmd == 'e'):
@@ -66,15 +66,15 @@ def editUser():
         print(e.message)
         print("User not found")
 
-def registerUser():
-    cardID = raw_input("Enter cardID/scan card:") 
-    firstName = raw_input("Enter first name:")
-    lastName = raw_input("Enter last name:")
-    className = raw_input("Enter class:")
+def registerUserWithCardID(cardID):
+    firstName = input("Enter first name:")
+    lastName = input("Enter last name:")
+    className = input("Enter class:")
     cleanedCardID = pruneCardIdInput(cardID)
     db.insertUser(cleanedCardID, firstName, lastName, className)
 
-
+def registerUser():
+    registerUserWithCardID(input("Enter cardID/scan card:"))
 
 def pruneCardIdInput(number):
     numberLength = len(number)
@@ -83,7 +83,7 @@ def pruneCardIdInput(number):
     number = number[0:numberLength]
     return toDecimalNumber(number)
 
-def logTime():
+def timeLoggingLoop():
     while(1):
         uid = input("Enter a user ID to log time or q to quit:")
         
@@ -92,28 +92,33 @@ def logTime():
         
         uid = pruneCardIdInput(uid)
         try:
-            (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
-            timelog = db.selectTimeLog(cardID)
-            if (timelog is not None):
-                logID, _, starttime, endtime = timelog
-                if (endtime is None): 
-                    db.updateTimeLog(str(logID))
-                    print("Time finished for " + first_name + " " + last_name
-                            + "\nTime gained: " + str(datetime.now()-starttime).split('.')[0])
-                else: 
-                    db.startTime(str(cardID))
-                    print("Time started for " + first_name + " " + last_name 
-                            + " at " + datetime.now().strftime('%H:%M:%S'))
-            else: 
-                db.startTime(str(cardID))
-                print("Time started for " + first_name + " " + last_name
-                        + " at " + datetime.now().strftime('%H:%M:%S'))
+            logTime(uid)
         except TypeError as e: 
             #print (e.message)
             print ("No user with that card ID")
             choice = input("Would you like to register a new user? (y/n)")
             if (choice == "y"):
-                registerUser()
+                registerUserWithCardID(uid)
+                logTime(uid)
+
+
+def logTime(uid):
+    (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
+    timelog = db.selectTimeLog(cardID)
+    if (timelog is not None):
+        logID, _, starttime, endtime = timelog
+        if (endtime is None):
+            db.updateTimeLog(str(logID))
+            print("Time finished for " + first_name + " " + last_name
+                    + "\nTime gained: " + str(datetime.now()-starttime).split('.')[0])
+        else: 
+            db.startTime(str(cardID))
+            print("Time started for " + first_name + " " + last_name 
+                    + " at " + datetime.now().strftime('%H:%M:%S'))
+    else: 
+        db.startTime(str(cardID))
+        print("Time started for " + first_name + " " + last_name
+                + " at " + datetime.now().strftime('%H:%M:%S'))
 
 def toDecimalNumber(number):
     if(number.isdigit()):
