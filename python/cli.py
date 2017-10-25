@@ -108,16 +108,18 @@ def timeLoggingLoop():
                 registerUserWithCardID(uid)
                 logTime(uid)
 
-
 def logTime(uid):
     (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
     timelog = db.selectTimeLog(cardID)
     if (timelog is not None):
-        logID, _, starttime, endtime = timelog
+        (logID, _, starttime, endtime) = timelog
         if (endtime is None):
-            db.updateTimeLog(str(logID))
-            print("Time finished for " + first_name + " " + last_name
-                    + "\nTime gained: " + str(datetime.now()-starttime).split('.')[0])
+            # does not allow time logs of 1 second or less
+            # to stop users accidentally signing off
+            if((datetime.now()-starttime).seconds > 1):
+                db.updateTimeLog(str(logID))
+                print("Time finished for " + first_name + " " + last_name
+                        + "\nTime gained: " + str(datetime.now()-starttime).split('.')[0])
         else: 
             db.startTime(str(cardID))
             print("Time started for " + first_name + " " + last_name 
