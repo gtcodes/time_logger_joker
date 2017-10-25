@@ -74,6 +74,8 @@ def registerUser():
     cleanedCardID = pruneCardIdInput(cardID)
     db.insertUser(cleanedCardID, firstName, lastName, className)
 
+
+
 def pruneCardIdInput(number):
     numberLength = len(number)
     if(numberLength > 9):
@@ -91,7 +93,7 @@ def logTime():
         uid = pruneCardIdInput(uid)
 
         try:
-            (cardID, first_name, last_name, _) = db.selectUserById(uid)
+            (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
             timelog = db.selectTimeLog(cardID)
             if (timelog is not None):
                 logID, _, starttime, endtime = timelog

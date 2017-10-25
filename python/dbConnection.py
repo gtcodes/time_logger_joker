@@ -18,11 +18,12 @@ def getVersion():
 #' values should be comma seperated
 def insertUser(cardID, firstName, lastName, className):
     insertQuery = "INSERT INTO USER(CARD_ID, FIRST_NAME, "+ \
-                "LAST_NAME, CLASS) VALUES(" + \
+                "LAST_NAME, CLASS, IS_ADMIN) VALUES(" + \
                  cardID + "," + \
                  "\"" + firstName + "\","+ \
                  "\"" + lastName + "\","+ \
-                 "\"" + className + "\")"
+                 "\"" + className + "\"," +\
+                 "0)"
     if(DEBUG):
         print(insertQuery)
     commit(insertQuery)
