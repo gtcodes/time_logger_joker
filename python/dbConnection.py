@@ -45,7 +45,7 @@ def selectUserById(cardID):
         result = cursor.fetchone()
         return(result)
     except:
-       print "Error: unable to fecth data"
+       print ("Error: unable to fecth data")
     
 def selectUserByName(firstName, lastName):
     selectQuery = "SELECT * FROM USER" + \
@@ -60,8 +60,8 @@ def selectUserByName(firstName, lastName):
        result = cursor.fetchone()
        return(result)
     except:
-        print "Error: unable to fetch user by name: " \
-                + firstName + " " + lastName
+        print ("Error: unable to fetch user by name: " \
+                + firstName + " " + lastName)
 
 def selectTimeLog(cardId):
     selectQuery = "SELECT * FROM TIMELOG WHERE CARD_ID = "\
@@ -73,17 +73,17 @@ def selectTimeLog(cardId):
         result = cursor.fetchone()
         return(result)
     except:
-        print "Error: unable to fetch timeLog from user " + str(cardId)
+        print ("Error: unable to fetch timeLog from user " + str(cardId))
 
 def getTotalTimeOfUser(cardId):
     selectQuery = "SELECT * FROM TIMELOG WHERE CARD_ID = " + str(cardId) + ";"
     try:
         cursor.execute(selectQuery)
         result = cursor.fetchall();
-        print result
+        print (result)
         return result
     except:
-        print "Error: unable to fetch all timelogs from user " + str(cardId)
+        print ("Error: unable to fetch all timelogs from user " + str(cardId))
     
 def updateTimeLog(logId):
     updateQuery = "update TIMELOG set END_TIME = NOW() where ID = "\
@@ -114,7 +114,7 @@ def commit(query):
     except:
         #might want rollback on some failues?
         #TODO handle errors better
-        print "Error: we failed to send query " + query
+        print ("Error: we failed to send query " + query)
 
 def close():
     db.close()

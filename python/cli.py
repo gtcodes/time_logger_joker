@@ -14,11 +14,11 @@ def login():
             if (admin and getpass.getpass("Password: ") == ADMIN_PASS): #LAZY POWAAA
                 readId()
         except TypeError:
-            print "Please try again"
+            print ("Please try again")
 
 def readId():
     while(1):
-        cmd = raw_input("What would you like to do?\n"+
+        cmd = input("What would you like to do?\n"+
                     " t - Log time\n" + 
                     " r - Register a new user\n" +
                     " e - Edit a user\n" +
@@ -33,27 +33,27 @@ def readId():
         #elif (cmd == 's'):
         #    status()
         elif (cmd == 'q'):
-            print "bye :)"
+            print ("bye :)")
             time.sleep(0.5)
             sys.exit(0)
         else:
-            print "\nCommand not recognized, please try again\n\n"
+            print ("\nCommand not recognized, please try again\n\n")
 
 def editUser():
-    cardID = raw_input("Enter cardID for the user to edit:")
+    cardID = input("Enter cardID for the user to edit:")
     print(cardID)
     try:
         (cardID, first_name, last_name, class_name, is_admin) = db.selectUserById(int(cardID))
-        fninp = raw_input("First name(" + first_name + "): ")
-        lninp = raw_input("Last name(" + last_name + "): ")
-        cninp = raw_input("Class name(" + class_name + "): ")
-        adinp = raw_input("Admin (" + str(bool(is_admin)) + "): ")
+        fninp = input("First name(" + first_name + "): ")
+        lninp = input("Last name(" + last_name + "): ")
+        cninp = input("Class name(" + class_name + "): ")
+        adinp = input("Admin (" + str(bool(is_admin)) + "): ")
         first_name = fninp if fninp != '' else first_name
         last_name = lninp if lninp != '' else last_name
         class_name = cninp if cninp != '' else class_name
         is_admin = adinp if adinp != '' else is_admin
 
-        print first_name, last_name, class_name, is_admin
+        print (first_name, last_name, class_name, is_admin)
         db.updateUser(int(cardID), first_name, last_name, class_name, int(is_admin))
 
         print("User updated with the following information")
@@ -85,13 +85,12 @@ def pruneCardIdInput(number):
 
 def logTime():
     while(1):
-        uid = raw_input("Enter a user ID to log time or q to quit:")
+        uid = input("Enter a user ID to log time or q to quit:")
         
         if uid == 'q':
             break
         
         uid = pruneCardIdInput(uid)
-
         try:
             (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
             timelog = db.selectTimeLog(cardID)
@@ -110,9 +109,9 @@ def logTime():
                 print("Time started for " + first_name + " " + last_name
                         + " at " + datetime.now().strftime('%H:%M:%S'))
         except TypeError as e: 
-            print e.message
-            print "No user with that card ID"
-            choice = raw_input("Would you like to register a new user? (y/n)")
+            #print (e.message)
+            print ("No user with that card ID")
+            choice = input("Would you like to register a new user? (y/n)")
             if (choice == "y"):
                 registerUser()
 
@@ -122,6 +121,6 @@ def toDecimalNumber(number):
     return str(int(number,16))
 
 if __name__ == "__main__":
-    print "Joker time logger v0.1"
+    print ("Joker time logger v0.1")
     #login()
     readId()
