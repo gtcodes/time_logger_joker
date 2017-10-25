@@ -3,17 +3,24 @@ from datetime import datetime
 import sys
 import time
 import getpass
+import hashlib
 
-ADMIN_PASS = "joker"
+#ADMIN_PASS = "8f1f2c12ad57b0c88cb9b35251c6fce053ae711a3ec518cb80dd6c922819e029"
+ADMIN_PASS = "7bc738ff692641c00b8a9d013b42f23e1c1b794927d12c6d0941c1306d57960e"
 
 def login():
     while(1):
         cardID = getpass.getpass("Card id: ")
+        cardID = pruneCardIdInput(CardID)
         try: 
-            (_,_,_,_,admin) = db.selectUserById(int(cardID))
-            if (admin and getpass.getpass("Password: ") == ADMIN_PASS): #LAZY POWAAA
+            (_,_,_,_,admin) = db.selectUserById(cardID)
+            passWord = getpass.getpass("Password: ")
+            byteEncodedPass = passWord.encode()
+            passWordHash = hashlib.sha256(byteEncodedPass).hexdigest()
+            if (admin and passWordHash == ADMIN_PASS): #LAZY POWAAA
                 readId()
         except TypeError:
+            print ("could not use card " + cardID)
             print ("Please try again")
 
 def readId():
@@ -127,5 +134,5 @@ def toDecimalNumber(number):
 
 if __name__ == "__main__":
     print ("Joker time logger v0.1")
-    #login()
-    readId()
+    login()
+    #readId()
