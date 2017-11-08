@@ -84,11 +84,12 @@ def registerUser():
     registerUserWithCardID(input("Enter cardID/scan card:"))
 
 def pruneCardIdInput(number):
+    number = toDecimalNumber(number)
     numberLength = len(number)
     if(numberLength > 9):
         numberLength = 9;
     number = number[0:numberLength]
-    return toDecimalNumber(number)
+    return number
 
 def timeLoggingLoop():
     while(1):
@@ -109,6 +110,7 @@ def timeLoggingLoop():
                 logTime(uid)
 
 def logTime(uid):
+    print("we are trying to logtime with " + uid)
     (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
     timelog = db.selectTimeLog(cardID)
     if (timelog is not None):
@@ -136,5 +138,5 @@ def toDecimalNumber(number):
 
 if __name__ == "__main__":
     print ("Joker time logger v0.1")
-    login()
-    #readId()
+    #login()
+    readId()
