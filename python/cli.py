@@ -4,6 +4,7 @@ import sys
 import time
 import getpass
 import hashlib
+import os
 
 #ADMIN_PASS = "8f1f2c12ad57b0c88cb9b35251c6fce053ae711a3ec518cb80dd6c922819e029"
 ADMIN_PASS = "7bc738ff692641c00b8a9d013b42f23e1c1b794927d12c6d0941c1306d57960e"
@@ -50,7 +51,7 @@ def editUser():
     cardID = input("Enter cardID for the user to edit:")
     print(cardID)
     try:
-        (cardID, first_name, last_name, class_name, is_admin) = db.selectUserById(int(cardID))
+        (cardID, first_name, last_name, class_name, is_admin) = db.selectUserById(str(cardID))
         fninp = input("First name(" + first_name + "): ")
         lninp = input("Last name(" + last_name + "): ")
         cninp = input("Class name(" + class_name + "): ")
@@ -72,6 +73,8 @@ def editUser():
     except TypeError as e:
         print(e.message)
         print("User not found")
+    input("Press enter to continue")
+    clearScreen()
 
 def registerUserWithCardID(cardID):
     firstName = input("Enter first name:")
@@ -82,17 +85,20 @@ def registerUserWithCardID(cardID):
 
 def registerUser():
     registerUserWithCardID(input("Enter cardID/scan card:"))
+    input("Press enter to continue")
+    clearScreen()
 
 def pruneCardIdInput(number):
     number = toDecimalNumber(number)
     numberLength = len(number)
     if(numberLength > 9):
-        numberLength = 9;
+        numberLength = 9
     number = number[0:numberLength]
     return number
 
 def timeLoggingLoop():
     while(1):
+        clearScreen()
         uid = input("Enter a user ID to log time or q to quit:")
         
         if uid == 'q':
@@ -108,9 +114,10 @@ def timeLoggingLoop():
             if (choice == "y"):
                 registerUserWithCardID(uid)
                 logTime(uid)
+        time.sleep(0.5)
+        input("Press enter to continue")
 
 def logTime(uid):
-    print("we are trying to logtime with " + uid)
     (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
     timelog = db.selectTimeLog(cardID)
     if (timelog is not None):
@@ -133,10 +140,14 @@ def logTime(uid):
 
 def toDecimalNumber(number):
     if(number.isdigit()):
-        return number;
+        return number
     return str(int(number,16))
 
+def clearScreen():
+    os.system('cls' if os.name == 'nt' else 'clear') #for cross-platform goodness
+
 if __name__ == "__main__":
+    clearScreen()
     print ("Joker time logger v0.1")
     #login()
     readId()

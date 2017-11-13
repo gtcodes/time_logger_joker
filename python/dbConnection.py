@@ -9,7 +9,7 @@ settings.init()
 
 db = MySQLdb.connect(settings.host,settings.userName,settings.password,settings.dbName)
 cursor = db.cursor()
-DEBUG = True
+DEBUG = False
 
 def getVersion():
     cursor.execute("SELECT VERSION()")
