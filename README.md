@@ -5,12 +5,19 @@ systemctl start mysqld.service
 ```
 
 ## Getting started 
-Getting the development environment up is pretty straight forward.
+Getting the development environment for the logger up is pretty straight forward.
 1. Install python [here](https://www.python.org/) 
 2. Install mysql, we are using v5.7 currently
-3. Copy the settings.exapmle file and rename it to settings.py, change all of the parameters to the ones you chose setting up mysql
+3. Copy the settings.example file and rename it to settings.py, change all of the parameters to the ones you chose setting up mysql
 4. Run the setup script for the database
 5. Run the script `python cli.py`
+
+To start the web interface
+1. Install django and django tables 'pip3 install django django_tables2'
+2. Change the lines in joker_extractor/settings.example that says "change this!"
+3. Change name of that same file to settings.py
+4. Start the server by running 'python3 manage.py runserver'
+5. Go to 'localhost:8000/logger/' 
 
 ## Usage
 * Login using the a admin userid and password
