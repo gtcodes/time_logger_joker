@@ -1,0 +1,25 @@
+{% if previous_day %}
+<a href="{% url 'day' previous_day %}">previous day</a>
+{% endif %}
+{% if next_day %}
+<a href="{% url 'day' next_day %}">next day</a>
+{% endif %}
+
+{% if log_list %}
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Attendance</th>
+        </tr>
+        {% for user,time in logdict.items %}
+            <tr>
+                <td><a href="{% url 'user' user.card_id %}">{{user.first_name}}</a></td>                
+                <td>
+                  {{time}}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>no logs available</p>
+{% endif %}

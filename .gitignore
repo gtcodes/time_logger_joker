@@ -1,5 +1,6 @@
 #project specific
 settings.py
+python/settings.example
 TODO
 .vscode/
 

@@ -5,6 +5,7 @@ import time
 import getpass
 import hashlib
 import os
+from termios import tcflush, TCIFLUSH
 
 #ADMIN_PASS = "8f1f2c12ad57b0c88cb9b35251c6fce053ae711a3ec518cb80dd6c922819e029"
 ADMIN_PASS = "7bc738ff692641c00b8a9d013b42f23e1c1b794927d12c6d0941c1306d57960e"
@@ -48,7 +49,7 @@ def readId():
             print ("\nCommand not recognized, please try again\n\n")
 
 def editUser():
-    cardID = input("Enter cardID for the user to edit:")
+    cardID = readCardNumber("Enter cardID for the user to edit:")
     print(cardID)
     try:
         (cardID, first_name, last_name, class_name, is_admin) = db.selectUserById(str(cardID))
@@ -73,8 +74,14 @@ def editUser():
     except TypeError as e:
         print(e.message)
         print("User not found")
-    input("Press enter to continue")
     clearScreen()
+
+def readCardNumber(message):
+    CardId = input(message)
+    now = time.time()
+    time.sleep(1)
+    tcflush(sys.stdin, TCIFLUSH)
+    return CardId
 
 def registerUserWithCardID(cardID):
     firstName = input("Enter first name:")
@@ -84,8 +91,7 @@ def registerUserWithCardID(cardID):
     db.insertUser(cleanedCardID, firstName, lastName, className)
 
 def registerUser():
-    registerUserWithCardID(input("Enter cardID/scan card:"))
-    input("Press enter to continue")
+    registerUserWithCardID(readCardNumber("Enter cardID/scan card:"))
     clearScreen()
 
 def pruneCardIdInput(number):
@@ -99,7 +105,7 @@ def pruneCardIdInput(number):
 def timeLoggingLoop():
     while(1):
         clearScreen()
-        uid = input("Enter a user ID to log time or q to quit:")
+        uid = readCardNumber("Enter a user ID to log time or q to quit:")
         
         if uid == 'q':
             break
@@ -110,12 +116,14 @@ def timeLoggingLoop():
         except TypeError as e: 
             #print (e.message)
             print ("No user with that card ID")
-            choice = input("Would you like to register a new user? (y/n)")
-            if (choice == "y"):
+            choice = input("Would you like to register a new user? (Y/n)")
+            if (choice.lower() == "y" or choice == ""):
                 registerUserWithCardID(uid)
                 logTime(uid)
-        time.sleep(0.5)
+            else:
+                continue
         input("Press enter to continue")
+
 
 def logTime(uid):
     (cardID, first_name, last_name, _, _) = db.selectUserById(uid)

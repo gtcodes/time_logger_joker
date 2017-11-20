@@ -1,0 +1,18 @@
+{% if log_list %}
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Start time</th>
+        <th>End time</th>
+    </tr>
+    {% for log in log_list %}
+        <tr>
+            <td><a href="{% url 'user' log.user.card_id %}">{{log.user.first_name}}</a></td>                
+            <td>{{log.start_time}}</td>
+            <td>{{log.end_time}}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>no logs available</p>
+{% endif %}
