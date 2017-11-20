@@ -3,6 +3,7 @@ from datetime import datetime
 import time
 import cli
 from array import *
+import random, string
 
 def readIdTest(randomId): #TODO: Insert randomId and read it back
     result = 1
@@ -39,10 +40,17 @@ def cleanDB(randomId, newRandomId): #TODO: Clean up test entries from DB
     print("DB cleaned\n")
 
 def generateRandomId():
-    randomId = 1
-    return randomId
+    return ()
+
+def randomWord(length):
+    letters = string.ascii_lowercase + string.ascii_uppercase
+    return ''.join(random.choice(letters) for i in range(length))
+
+def randomNumber(length):
+    return ''.join(str(random.randint(0,9)) for i in range(length))
 
 if __name__ == "__main__":
+    
     results = array('b')
     randomId = generateRandomId()
     newRandomId = generateRandomId()
@@ -58,6 +66,7 @@ if __name__ == "__main__":
     results.append(toDecimalNumberTest())
     results.append(clearScreenTest())
     cleanDB(randomId, newRandomId)
+    
 
     for i in results:
         if i:
