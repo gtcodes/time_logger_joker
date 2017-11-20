@@ -33,7 +33,8 @@ class Timelog(models.Model):
     # delta = end_time-start_time
     
     def delta(self):
-        return self.end_time - self.start_time
+        if self.end_time != None:
+            return self.end_time - self.start_time
 
     def __str__(self):
             return "id: " + str(self.id) + \
