@@ -6,7 +6,7 @@ from array import *
 import random, string
 
 def readIdTest(randomId): #TODO: Insert randomId and read it back
-    result = 1
+    reseult = 1
     return result
 def loginTest(): #Relevant?
     result = 1
@@ -40,7 +40,7 @@ def cleanDB(randomId, newRandomId): #TODO: Clean up test entries from DB
     print("DB cleaned\n")
 
 def generateRandomId():
-    return ()
+    return (randomNumber(10), randomWord(10), randomWord(10), randomWord(4), random.randint(0,1))
 
 def randomWord(length):
     letters = string.ascii_lowercase + string.ascii_uppercase
@@ -67,7 +67,6 @@ if __name__ == "__main__":
     results.append(clearScreenTest())
     cleanDB(randomId, newRandomId)
     
-
     for i in results:
         if i:
             print("OK")
