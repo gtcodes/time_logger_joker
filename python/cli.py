@@ -30,15 +30,15 @@ def readId():
         cmd = input("What would you like to do?\n"+
                     " t - Log time\n" + 
                     " r - Register a new user\n" +
-                    " e - Edit a user\n" +
+                    #" e - Edit a user\n" +
                     " q - Quit\n")
     
         if (cmd == 't'):
             timeLoggingLoop()
         elif (cmd == 'r'):
             registerUser()
-        elif (cmd == 'e'):
-            editUser()
+        #elif (cmd == 'e'):
+        #    editUser()
         #elif (cmd == 's'):
         #    status()
         elif (cmd == 'q'):
