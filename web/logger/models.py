@@ -1,6 +1,4 @@
 from django.db import models 
-from django.utils.html import format_html
-import django_tables2 as tables
 import datetime
 
 # Create your models here.
@@ -19,7 +17,19 @@ class User(models.Model):
         return total
 
     def __str__(self):
-        return str(self.card_id) + " " + self.first_name
+        return self.first_name.lower() + " " + self.last_name.lower()
+
+    def __lt__(self, other):
+        return self.first_name.lower() < other.first_name.lower()
+
+    def __gt__(self, other):
+        return self.first_name.lower() > other.first_name.lower()
+    
+    def __le__(self, other):
+        return self.first_name.lower() <= other.first_name.lower()
+    
+    def __ge__(self, other):
+        return self.first_name.lower() >= other.first_name.lower()
 
     class Meta:
         managed = False
@@ -42,16 +52,6 @@ class Timelog(models.Model):
                     ", end_time: " + str(self.end_time) + \
                     ", <User: " + str(self.user) + ">"
                     
-
     class Meta:
         managed = False
         db_table = 'TIMELOG'
-
-class UserTable(tables.Table):
-
-    def render_card_id(self, value):
-        return format_html('<a href="{}">{}</a>', value, value)
-
-    class Meta:
-        model = User
-

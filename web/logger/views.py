@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
-from logger.models import Timelog, User, UserTable
+from logger.models import Timelog, User
+from logger.tables import UserTable, DayTable
 from datetime import datetime, timedelta
+from django_tables2 import RequestConfig
 
 # Create your views here.
 def index(request):
@@ -17,6 +19,7 @@ def user(request, request_card_id):
 def users(request):
     user_list = User.objects.all()
     table = UserTable(user_list)
+    RequestConfig(request).configure(table)
     context = {'user_list': user_list, 'table': table}
     return render(request, 'users/index.html', context)
 
@@ -35,11 +38,19 @@ def day(request, day):
 
     logdict = {}
     for log in log_list:
-        if log.user in logdict:
-            logdict[log.user] += log.delta()
+        if log.end_time != None:
+            if log.user in logdict:
+                logdict[log.user] += log.delta()
+            else:
+                logdict[log.user] = log.delta()
         else:
-            logdict[log.user] = log.delta()
-    print (logdict)
+            logdict[log.user] = "Did not check out"
+    
+    
+    tab_dict = [{"user": usr, "absence": abse} for usr, abse in logdict.items()]
+
+    table = DayTable(tab_dict)
+    RequestConfig(request).configure(table)
 
     next_day = (day + timedelta(days=1)).date()
     prev_day = (day + timedelta(days=-1)).date()
@@ -50,6 +61,7 @@ def day(request, day):
         'today': day,
         'next_day': str(next_day),
         'previous_day': str(prev_day),
+        'table': table,
     }
 
     return render(request, 'logs/index.html', context)
