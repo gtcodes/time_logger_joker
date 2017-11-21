@@ -5,6 +5,7 @@ from logger.models import Timelog, User
 from logger.tables import UserTable, DayTable
 from datetime import datetime, timedelta
 from django_tables2 import RequestConfig
+from django.db.models import F
 
 # Create your views here.
 def index(request):
@@ -30,6 +31,9 @@ def logs(request, request_card_id):
     return render(request, 'users/logs.html', context)
 
 def day(request, day):
+    if (request.POST.get('endJoker')):
+        Timelog.objects.filter(end_time=None).update(end_time=F('start_time'))
+
     day = datetime.strptime(day,'%Y-%m-%d')
     day = day.replace(hour=0, minute=0, second=0, microsecond=0)
 
