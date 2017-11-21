@@ -79,8 +79,13 @@ def editUser():
 def readCardNumber(message):
     CardId = input(message)
     now = time.time()
-    time.sleep(1)
+    clearScreen()
+    if (CardId == 'q'): 
+        return CardId
+    os.system("echo 'Thanks! I will go and look for card id: " + str(CardId) + "\'" + "| cowsay" )
+    time.sleep(3)
     tcflush(sys.stdin, TCIFLUSH)
+    clearScreen()
     return CardId
 
 def registerUserWithCardID(cardID):
