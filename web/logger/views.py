@@ -21,7 +21,8 @@ def users(request):
     user_list = User.objects.all()
     table = UserTable(user_list)
     RequestConfig(request).configure(table)
-    context = {'user_list': user_list, 'table': table}
+    context = {'table': table}
+
     return render(request, 'users/index.html', context)
 
 def logs(request, request_card_id):
@@ -31,15 +32,17 @@ def logs(request, request_card_id):
     return render(request, 'users/logs.html', context)
 
 def day(request, day):
-    if (request.POST.get('endJoker')):
+    day = datetime.strptime(day,'%Y-%m-%d').replace(hour=0, minute=0, second=0, microsecond=0)
+
+    if (request.POST.get('endAll')):
         Timelog.objects.filter(end_time=None).update(end_time=F('start_time'))
+    elif (request.POST.get('endToday')):
+        Timelog.objects.filter(end_time=None, start_time__gt=day).update(end_time=F('start_time'))
 
-    day = datetime.strptime(day,'%Y-%m-%d')
-    day = day.replace(hour=0, minute=0, second=0, microsecond=0)
-
+    # get information from database
     log_list = Timelog.objects.all().filter(start_time__gt=day, start_time__lt=day+timedelta(days=1, seconds=-1))
-    user_list = User.objects.all()
 
+    # calculate total attendance
     logdict = {}
     for log in log_list:
         if log.end_time != None:
@@ -50,19 +53,17 @@ def day(request, day):
         else:
             logdict[log.user] = "Did not check out"
     
-    
-    tab_dict = [{"user": usr, "absence": abse} for usr, abse in logdict.items()]
+    # prepare the table 
+    tab_dict = [{"user": usr, "attendance": abse} for usr, abse in logdict.items()]
 
     table = DayTable(tab_dict)
     RequestConfig(request).configure(table)
 
+    # variables for navigation
     next_day = (day + timedelta(days=1)).date()
     prev_day = (day + timedelta(days=-1)).date()
+    
     context = {
-        'logdict': logdict,
-        'log_list': log_list,
-        'user_list': user_list,
-        'today': day,
         'next_day': str(next_day),
         'previous_day': str(prev_day),
         'table': table,

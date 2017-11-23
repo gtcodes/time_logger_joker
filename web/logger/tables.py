@@ -12,14 +12,8 @@ class UserTable(tables.Table):
 
 class DayTable(tables.Table):
     user = tables.Column()
-    absence = tables.Column()
-
-    # def order_user(self, queryset, is_descending):
-    #     queryset = queryset.annotate(
-    #         name='user.first_name'
-    #     ).order_by(('-' if is_descending else '') + 'name')
-    #     return (queryset, True)
-
+    attendance = tables.Column()
+    
     def render_user(self, value):
         return format_html('<a href="{}">{}</a>', 
                     "/logger/user/"+str(value.card_id),
