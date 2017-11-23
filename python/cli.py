@@ -42,8 +42,8 @@ def readId():
         #elif (cmd == 's'):
         #    status()
         elif (cmd == 'q'):
-            print ("bye :)")
-            time.sleep(0.5)
+            os.system("echo 'Bye!' | cowsay -d" )
+            time.sleep(1.0)
             sys.exit(0)
         else:
             print ("\nCommand not recognized, please try again\n\n")
