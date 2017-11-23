@@ -6,7 +6,7 @@ from array import *
 import random, string
 
 def readIdTest(randomId): #TODO: Insert randomId and read it back
-    reseult = 1
+    result = 1
     return result
 def loginTest(): #Relevant?
     result = 1
