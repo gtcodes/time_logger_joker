@@ -5,11 +5,13 @@
 <a href="{% url 'day' next_day %}">next day</a>
 {% endif %}
 
+{% if request.user.is_authenticated %}
 <form action="#" method="post" onsubmit="return confirm('do you really want to do this? \nThis will invalidate all timelogs that are not yet checked out')">
     {% csrf_token %}
     <input type="submit" class="btn" value="End current day" name="endToday">
     <input type="submit" class="btn" value="End all days" name="endAll">
 </form>
+{% endif %}
 
 {% load render_table from django_tables2 %}
 {% render_table table %}
