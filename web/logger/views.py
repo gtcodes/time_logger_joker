@@ -9,7 +9,7 @@ from django_tables2 import RequestConfig
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+@login_required(login_url='/admin/login/')
 def index(request):
     return day(request, str(datetime.today().date()))
 
@@ -36,6 +36,7 @@ def logs(request, request_card_id):
 
     return render(request, 'users/logs.html', context)
 
+@login_required(login_url='/admin/login/')
 def day(request, day):
     print("##########################")
     print("request", request.user.is_authenticated)
