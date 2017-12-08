@@ -37,7 +37,7 @@ class User(models.Model):
 
 class Timelog(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)  
-    user = models.ForeignKey(User, db_column="card_id")  
+    user = models.ForeignKey(User, db_column="card_id", on_delete=models.CASCADE)  
     start_time = models.DateTimeField(db_column='START_TIME')  
     end_time = models.DateTimeField(db_column='END_TIME', blank=True, null=True)  
     # delta = end_time-start_time
