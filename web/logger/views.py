@@ -38,9 +38,6 @@ def logs(request, request_card_id):
 
 @login_required(login_url='/admin/login/')
 def day(request, day):
-    print("##########################")
-    print("request", request.user.is_authenticated)
-    print("##########################")
     day = datetime.strptime(day,'%Y-%m-%d').replace(hour=0, minute=0, second=0, microsecond=0)
 
     if (request.POST.get('endAll') and request.user.is_authenticated):
@@ -56,6 +53,8 @@ def day(request, day):
     # calculate total attendance
     logdict = {}
     for log in log_list:
+        log.user.first_name = log.user.first_name.capitalize()
+        log.user.last_name = log.user.last_name.capitalize()
         if log.end_time != None:
             if log.user in logdict:
                 logdict[log.user] += log.delta()

@@ -11,14 +11,11 @@ class UserTable(tables.Table):
         model = User
 
 class DayTable(tables.Table):
-    user = tables.Column()
+    user = tables.Column(order_by=('user.last_name', 'user.first_name'))
     attendance = tables.Column()
     
     def render_user(self, value):
         return format_html('<a href="{}">{}</a>', 
                     "/logger/user/"+str(value.card_id),
-                    value.first_name.capitalize()+" "+value.last_name.capitalize())
+                    value.last_name.capitalize() +" "+ value.first_name.capitalize())
 
-    def order_user(self, queryset, is_descending):
-        queryset = queryset.order_by(('-' if is_descending else '') + 'first_name')
-        return (queryset, True)
