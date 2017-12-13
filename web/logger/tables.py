@@ -2,6 +2,7 @@ from django.utils.html import format_html
 from logger.models import User
 import django_tables2 as tables
 import math
+import datetime
 
 class UserTable(tables.Table):
 
@@ -21,4 +22,7 @@ class DayTable(tables.Table):
                     value.last_name.capitalize() +" "+ value.first_name.capitalize())
 
     def render_attendance(self, value):
-        return math.floor(value.seconds/60)
+        if(isinstance(value, datetime.timedelta)):
+            return math.floor(value.seconds/60)
+        else: 
+            return value
