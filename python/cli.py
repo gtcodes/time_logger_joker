@@ -19,23 +19,26 @@ def login():
         
 
 def isAdmin():
-    cardID = readCardNumber("Card id: ")
-    try: 
-        (_,_,_,_,admin) = db.selectUserById(cardID)
-        passWord = getpass.getpass("Password: ")
-        byteEncodedPass = passWord.encode()
-        passWordHash = hashlib.sha256(byteEncodedPass).hexdigest()
-        if (admin and passWordHash == ADMIN_PASS): #LAZY POWAAA
-            clearScreen()
-            return(True)
-        else:
-            print ("Sorry, that did not work.")
+    cardId = readCardNumber("Card id: ")
+    if(cardId != -1):
+        try: 
+            (_,_,_,_,admin) = db.selectUserById(cardId)
+            passWord = getpass.getpass("Password: ")
+            byteEncodedPass = passWord.encode()
+            passWordHash = hashlib.sha256(byteEncodedPass).hexdigest()
+            if (admin and passWordHash == ADMIN_PASS): #LAZY POWAAA
+                clearScreen()
+                return(True)
+            else:
+                print ("Sorry, that did not work.")
+                time.sleep(1.5)
+        except TypeError:
+            print ("could not use card " + cardId)
+            print ("Please try again")
             time.sleep(1.5)
-    except TypeError:
-        print ("could not use card " + cardID)
-        print ("Please try again")
-        time.sleep(1.5)
-    clearScreen()
+        clearScreen()
+    else:
+        print("Invalid card number")
     return(False)
 
 def readId():
@@ -95,14 +98,16 @@ def editUser():
 
 def readCardNumber(message):
     cardId = input(message)
+    try:
+        number = toDecimalNumber(cardId)
+    except ValueError:
+        return -1
     clearScreen()
-    if (cardId == 'q'): 
-        return cardId
     os.system("echo 'Thanks! I will go and look for card id: " + str(cardId) + "\'" + "| cowsay" )
     time.sleep(3)
     tcflush(sys.stdin, TCIFLUSH)
     clearScreen()
-    cleanedCardId = pruneCardIdInput(cardId)
+    cleanedCardId = pruneCardIdInput(number)
     return cleanedCardId
 
 def registerUserWithCardID(cardID):
@@ -116,7 +121,6 @@ def registerUser():
     clearScreen()
 
 def pruneCardIdInput(number):
-    number = toDecimalNumber(number)
     numberLength = len(number)
     if(numberLength > 9):
         numberLength = 9
@@ -130,7 +134,7 @@ def timeLoggingLoop():
         
         if uid == 'q':
             break
-        elif uid != '':
+        elif uid != -1:
             try:
                 logTime(uid)
             except TypeError as e: 
