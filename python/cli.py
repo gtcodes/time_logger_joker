@@ -7,23 +7,37 @@ import hashlib
 import os
 from termios import tcflush, TCIFLUSH
 
-#ADMIN_PASS = "8f1f2c12ad57b0c88cb9b35251c6fce053ae711a3ec518cb80dd6c922819e029"
-ADMIN_PASS = "7bc738ff692641c00b8a9d013b42f23e1c1b794927d12c6d0941c1306d57960e"
+#ADMIN_PASS = "7bc738ff692641c00b8a9d013b42f23e1c1b794927d12c6d0941c1306d57960e"
+ADMIN_PASS = "ac7e43315375cea929bac587054782f379b535a479ca84635fdb4790cea39c7e"
 
 def login():
     while(1):
-        cardID = getpass.getpass("Card id: ")
-        cardID = pruneCardIdInput(CardID)
-        try: 
-            (_,_,_,_,admin) = db.selectUserById(cardID)
-            passWord = getpass.getpass("Password: ")
-            byteEncodedPass = passWord.encode()
-            passWordHash = hashlib.sha256(byteEncodedPass).hexdigest()
-            if (admin and passWordHash == ADMIN_PASS): #LAZY POWAAA
-                readId()
-        except TypeError:
-            print ("could not use card " + cardID)
-            print ("Please try again")
+        print("Logging disabled, admin login required")
+        if(isAdmin()):
+            readId()
+    
+        
+
+def isAdmin():
+    cardID = getpass.getpass("Card id: ")
+    cardID = pruneCardIdInput(cardID)
+    try: 
+        (_,_,_,_,admin) = db.selectUserById(cardID)
+        passWord = getpass.getpass("Password: ")
+        byteEncodedPass = passWord.encode()
+        passWordHash = hashlib.sha256(byteEncodedPass).hexdigest()
+        if (admin and passWordHash == ADMIN_PASS): #LAZY POWAAA
+            clearScreen()
+            return(True)
+        else:
+            print ("Sorry, that did not work.")
+            time.sleep(1.5)
+    except TypeError:
+        print ("could not use card " + cardID)
+        print ("Please try again")
+        time.sleep(1.5)
+    clearScreen()
+    return(False)
 
 def readId():
     while(1):
@@ -41,6 +55,7 @@ def readId():
         #    editUser()
         #elif (cmd == 's'):
         #    status()
+        elif (cmd == 'l')
         elif (cmd == 'q'):
             os.system("echo 'Bye!' | cowsay -d" )
             time.sleep(1.0)
@@ -74,6 +89,7 @@ def editUser():
     except TypeError as e:
         print(e.message)
         print("User not found")
+    input("Press enter to continue")
     clearScreen()
 
 def readCardNumber(message):
@@ -161,6 +177,6 @@ def clearScreen():
 
 if __name__ == "__main__":
     clearScreen()
-    print ("Joker time logger v0.1")
-    #login()
-    readId()
+    print ("Joker time logger v1.0")
+    login()
+    #readId()
