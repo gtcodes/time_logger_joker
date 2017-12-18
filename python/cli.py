@@ -45,6 +45,7 @@ def readId():
                     " t - Log time\n" + 
                     " r - Register a new user\n" +
                     #" e - Edit a user\n" +
+                    " d - Disable logging\n"
                     " q - Quit\n")
     
         if (cmd == 't'):
@@ -55,7 +56,8 @@ def readId():
         #    editUser()
         #elif (cmd == 's'):
         #    status()
-        elif (cmd == 'l')
+        elif (cmd == 'd' and isAdmin()):
+            return 0
         elif (cmd == 'q'):
             os.system("echo 'Bye!' | cowsay -d" )
             time.sleep(1.0)
@@ -130,20 +132,25 @@ def timeLoggingLoop():
         
         if uid == 'q':
             break
-        
-        uid = pruneCardIdInput(uid)
-        try:
-            logTime(uid)
-        except TypeError as e: 
-            #print (e.message)
-            print ("No user with that card ID")
-            choice = input("Would you like to register a new user? (Y/n)")
-            if (choice.lower() == "y" or choice == ""):
-                registerUserWithCardID(uid)
+        elif uid != '':
+
+            uid = pruneCardIdInput(uid)
+            try:
                 logTime(uid)
-            else:
-                continue
+            except TypeError as e: 
+                #print (e.message)
+                print ("No user with that card ID")
+                choice = input("Would you like to register a new user? (Y/n)")
+                if (choice.lower() == "y" or choice == ""):
+                    registerUserWithCardID(uid)
+                    logTime(uid)
+                else:
+                    continue
+        else:
+            print("Invalid card ID\n")
+        
         input("Press enter to continue")
+
 
 
 def logTime(uid):
