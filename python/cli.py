@@ -19,8 +19,8 @@ def login():
         
 
 def isAdmin():
-    cardID = getpass.getpass("Card id: ")
-    #cardID = pruneCardIdInput(cardID)
+    cardID = input("Card id: ")
+    cardID = pruneCardIdInput(cardID)
     try: 
         (_,_,_,_,admin) = db.selectUserById(cardID)
         passWord = getpass.getpass("Password: ")
