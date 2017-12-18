@@ -19,8 +19,7 @@ def login():
         
 
 def isAdmin():
-    cardID = input("Card id: ")
-    cardID = pruneCardIdInput(cardID)
+    cardID = readCardNumber("Card id: ")
     try: 
         (_,_,_,_,admin) = db.selectUserById(cardID)
         passWord = getpass.getpass("Password: ")
@@ -95,22 +94,21 @@ def editUser():
     clearScreen()
 
 def readCardNumber(message):
-    CardId = input(message)
-    now = time.time()
+    cardId = input(message)
     clearScreen()
-    if (CardId == 'q'): 
-        return CardId
-    os.system("echo 'Thanks! I will go and look for card id: " + str(CardId) + "\'" + "| cowsay" )
+    if (cardId == 'q'): 
+        return cardId
+    os.system("echo 'Thanks! I will go and look for card id: " + str(cardId) + "\'" + "| cowsay" )
     time.sleep(3)
     tcflush(sys.stdin, TCIFLUSH)
     clearScreen()
-    return CardId
+    cleanedCardId = pruneCardIdInput(cardId)
+    return cleanedCardId
 
 def registerUserWithCardID(cardID):
     firstName = input("Enter first name:")
     lastName = input("Enter last name:")
     className = input("Enter class:")
-    cleanedCardID = pruneCardIdInput(cardID)
     db.insertUser(cleanedCardID, firstName, lastName, className)
 
 def registerUser():
@@ -133,8 +131,6 @@ def timeLoggingLoop():
         if uid == 'q':
             break
         elif uid != '':
-
-            uid = pruneCardIdInput(uid)
             try:
                 logTime(uid)
             except TypeError as e: 
