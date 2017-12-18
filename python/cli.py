@@ -98,6 +98,7 @@ def editUser():
 
 def readCardNumber(message):
     cardId = input(message)
+    if (cardId == 'q'): return 'q'
     try:
         number = toDecimalNumber(cardId)
     except ValueError:
