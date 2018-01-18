@@ -55,3 +55,14 @@ class Timelog(models.Model):
     class Meta:
         managed = False
         db_table = 'TIMELOG'
+
+class Team(models.Model):
+    id = models.BigAutoField(db_column='ID', primary_key=True)
+    name = models.CharField(db_column='NAME', max_length=50)
+    users = models.ManyToManyField(User, db_column='USERS')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'TEAM'
