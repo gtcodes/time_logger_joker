@@ -15,8 +15,6 @@ def login():
         print("Logging disabled, admin login required")
         if(isAdmin()):
             readId()
-    
-        
 
 def isAdmin():
     cardId = readCardNumber("Card id: ")
@@ -90,6 +88,7 @@ def editUser():
         print("  LastName: " + last_name)
         print("     Class: " + class_name)
         print("     Admin: " + str(is_admin))
+    
     except TypeError as e:
         print(e.message)
         print("User not found")
@@ -115,10 +114,17 @@ def registerUserWithCardID(cardID):
     firstName = input("Enter first name:")
     lastName = input("Enter last name:")
     className = input("Enter class:")
-    db.insertUser(cleanedCardID, firstName, lastName, className)
+    db.insertUser(cardID, firstName, lastName, className)
 
 def registerUser():
-    registerUserWithCardID(readCardNumber("Enter cardID/scan card:"))
+    cardID = -1
+    while (cardID != 'q'):
+        cardID = readCardNumber("Enter cardID/scan card:")
+        if (cardID == -1):
+            print("Invalid cardID")
+        elif (cardID != 'q'):
+            registerUserWithCardID(cardID)
+            return 1
     clearScreen()
 
 def pruneCardIdInput(number):
@@ -152,8 +158,6 @@ def timeLoggingLoop():
         
         input("Press enter to continue")
 
-
-
 def logTime(uid):
     (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
     timelog = db.selectTimeLog(cardID)
@@ -186,5 +190,6 @@ def clearScreen():
 if __name__ == "__main__":
     clearScreen()
     print ("Joker time logger v1.0")
-    login()
-    #readId()
+    # Login is borked for now
+    #login()
+    readId()
