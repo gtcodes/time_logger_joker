@@ -67,7 +67,7 @@ def day(request, day):
     tab_dict = [{"user": usr, "attendance": abse} for usr, abse in logdict.items()]
 
     table = DayTable(tab_dict)
-    RequestConfig(request).configure(table)
+    RequestConfig(request, paginate={'per_page': 100}).configure(table)
 
     # variables for navigation
     next_day = (day + timedelta(days=1)).date()
