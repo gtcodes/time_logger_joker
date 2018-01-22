@@ -7,23 +7,37 @@ import hashlib
 import os
 from termios import tcflush, TCIFLUSH
 
-#ADMIN_PASS = "8f1f2c12ad57b0c88cb9b35251c6fce053ae711a3ec518cb80dd6c922819e029"
-ADMIN_PASS = "7bc738ff692641c00b8a9d013b42f23e1c1b794927d12c6d0941c1306d57960e"
+#ADMIN_PASS = "7bc738ff692641c00b8a9d013b42f23e1c1b794927d12c6d0941c1306d57960e"
+ADMIN_PASS = "ac7e43315375cea929bac587054782f379b535a479ca84635fdb4790cea39c7e"
 
 def login():
     while(1):
-        cardID = getpass.getpass("Card id: ")
-        cardID = pruneCardIdInput(CardID)
+        print("Logging disabled, admin login required")
+        if(isAdmin()):
+            readId()
+
+def isAdmin():
+    cardId = readCardNumber("Card id: ")
+    if(cardId != -1):
         try: 
-            (_,_,_,_,admin) = db.selectUserById(cardID)
+            (_,_,_,_,admin) = db.selectUserById(cardId)
             passWord = getpass.getpass("Password: ")
             byteEncodedPass = passWord.encode()
             passWordHash = hashlib.sha256(byteEncodedPass).hexdigest()
             if (admin and passWordHash == ADMIN_PASS): #LAZY POWAAA
-                readId()
+                clearScreen()
+                return(True)
+            else:
+                print ("Sorry, that did not work.")
+                time.sleep(1.5)
         except TypeError:
-            print ("could not use card " + cardID)
+            print ("could not use card " + cardId)
             print ("Please try again")
+            time.sleep(1.5)
+        clearScreen()
+    else:
+        print("Invalid card number")
+    return(False)
 
 def readId():
     while(1):
@@ -31,6 +45,7 @@ def readId():
                     " t - Log time\n" + 
                     " r - Register a new user\n" +
                     #" e - Edit a user\n" +
+                    " d - Disable logging\n"
                     " q - Quit\n")
     
         if (cmd == 't'):
@@ -41,6 +56,8 @@ def readId():
         #    editUser()
         #elif (cmd == 's'):
         #    status()
+        elif (cmd == 'd' and isAdmin()):
+            return 0
         elif (cmd == 'q'):
             os.system("echo 'Bye!' | cowsay -d" )
             time.sleep(1.0)
@@ -71,36 +88,46 @@ def editUser():
         print("  LastName: " + last_name)
         print("     Class: " + class_name)
         print("     Admin: " + str(is_admin))
+    
     except TypeError as e:
         print(e.message)
         print("User not found")
+    input("Press enter to continue")
     clearScreen()
 
 def readCardNumber(message):
-    CardId = input(message)
-    now = time.time()
+    cardId = input(message)
+    if (cardId == 'q'): return 'q'
+    try:
+        number = toDecimalNumber(cardId)
+    except ValueError:
+        return -1
     clearScreen()
-    if (CardId == 'q'): 
-        return CardId
-    os.system("echo 'Thanks! I will go and look for card id: " + str(CardId) + "\'" + "| cowsay" )
+    os.system("echo 'Thanks! I will go and look for card id: " + str(cardId) + "\'" + "| cowsay" )
     time.sleep(3)
     tcflush(sys.stdin, TCIFLUSH)
     clearScreen()
-    return CardId
+    cleanedCardId = pruneCardIdInput(number)
+    return cleanedCardId
 
 def registerUserWithCardID(cardID):
     firstName = input("Enter first name:")
     lastName = input("Enter last name:")
     className = input("Enter class:")
-    cleanedCardID = pruneCardIdInput(cardID)
-    db.insertUser(cleanedCardID, firstName, lastName, className)
+    db.insertUser(cardID, firstName, lastName, className)
 
 def registerUser():
-    registerUserWithCardID(readCardNumber("Enter cardID/scan card:"))
+    cardID = -1
+    while (cardID != 'q'):
+        cardID = readCardNumber("Enter cardID/scan card:")
+        if (cardID == -1):
+            print("Invalid cardID")
+        elif (cardID != 'q'):
+            registerUserWithCardID(cardID)
+            return 1
     clearScreen()
 
 def pruneCardIdInput(number):
-    number = toDecimalNumber(number)
     numberLength = len(number)
     if(numberLength > 9):
         numberLength = 9
@@ -114,21 +141,22 @@ def timeLoggingLoop():
         
         if uid == 'q':
             break
-        
-        uid = pruneCardIdInput(uid)
-        try:
-            logTime(uid)
-        except TypeError as e: 
-            #print (e.message)
-            print ("No user with that card ID")
-            choice = input("Would you like to register a new user? (Y/n)")
-            if (choice.lower() == "y" or choice == ""):
-                registerUserWithCardID(uid)
+        elif uid != -1:
+            try:
                 logTime(uid)
-            else:
-                continue
+            except TypeError as e: 
+                #print (e.message)
+                print ("No user with that card ID")
+                choice = input("Would you like to register a new user? (Y/n)")
+                if (choice.lower() == "y" or choice == ""):
+                    registerUserWithCardID(uid)
+                    logTime(uid)
+                else:
+                    continue
+        else:
+            print("Invalid card ID\n")
+        
         input("Press enter to continue")
-
 
 def logTime(uid):
     (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
@@ -161,6 +189,7 @@ def clearScreen():
 
 if __name__ == "__main__":
     clearScreen()
-    print ("Joker time logger v0.1")
+    print ("Joker time logger v1.0")
+    # Login is borked for now
     #login()
     readId()
