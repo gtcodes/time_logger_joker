@@ -2,8 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.http import HttpResponse
 from django.template import loader
-from logger.models import Timelog, User
-from logger.tables import UserTable, DayTable
+
+from .models import Timelog, User, Team
+from .tables import UserTable, DayTable
+from .forms import TeamForm
+
 from datetime import datetime, timedelta
 from django_tables2 import RequestConfig
 from django.db.models import F
@@ -12,7 +15,6 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='/admin/login/')
 def index(request):
     return day(request, str(datetime.today().date()))
-
 
 @login_required(login_url='/admin/login/')
 def user(request, request_card_id):
@@ -80,3 +82,30 @@ def day(request, day):
     }
 
     return render(request, 'logs/index.html', context)
+
+@login_required(login_url='/admin/login/')
+def add_team(request):
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            users = form.cleaned_data['users']
+
+            team = Team()
+            team.name = name
+            team.save()
+            team.users.set(users)
+            team.save()
+            return HttpResponse(name + " " + str([str(user) for user in users]))
+    else: 
+        form = TeamForm()
+
+    return render(request, 'teams/add.html', {'form': form})
+
+def teams(request):
+    teams = Team.objects.all()
+    context = {
+        'teams': teams,
+    }
+    return render(request, 'teams/index.html', context)

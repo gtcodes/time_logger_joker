@@ -1,0 +1,7 @@
+{% for team in teams %}
+    <p>{{ team }}, 
+        {% for user in team.users.all %}
+            {{user.first_name}}
+        {% endfor %}
+    </p>
+{% endfor %}
