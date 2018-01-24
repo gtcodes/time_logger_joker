@@ -1,19 +1,11 @@
 from django import forms
 from .models import User, Team
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
-class TeamForm(forms.ModelForm):    
-    class Meta: 
-        model = Team
-        fields = '__all__'
-
+class TeamForm(forms.Form):    
+    
     name = forms.CharField(label='Name', max_length=50)
-    # members = forms.ModelMultipleChoiceField(queryset=User.objects.all(), label='Members')
-
-    # def __init__(self, *args, **kwargs):
-    #     if kwargs.get('instance'):
-    #         initial = kwargs.setdefault('initial', {})
-    #         initial['members'] = [member.pk for member in kwargs['instance'].member_set.all()]
-    #     forms.ModelForm.__init__(self, *args, **kwargs)
+    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=FilteredSelectMultiple("Members", is_stacked=False))
     
     def save(self, commit=True):
         # Get the unsave Pizza instance
@@ -35,3 +27,7 @@ class TeamForm(forms.ModelForm):
             self.save_m2m()
 
         return instance
+
+    class Media:
+        css = {'all': ('/static/admin/css/widgets.css',),}
+        js = ('/admin/jsi18n',)
