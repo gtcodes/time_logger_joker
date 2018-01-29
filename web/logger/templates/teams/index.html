@@ -1,7 +1,13 @@
-{% for team in teams %}
-    <p>{{ team }}, 
-        {% for user in team.users.all %}
-            {{user.first_name}}
-        {% endfor %}
-    </p>
-{% endfor %}
+<h1>Team Leaderboard</h1>
+<table>
+    <tr>
+        <th>Team name</th>
+        <th>Time gained</th>
+    </tr>
+    {% for team in teams %}
+    <tr>
+        <td><a href="{% url 'team_detail' team %}">{{ team }}</a></td> 
+        <td>{{ team.total_time_limited }}</td>
+    </tr>
+    {% endfor %}
+</table>

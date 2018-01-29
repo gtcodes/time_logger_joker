@@ -4,6 +4,7 @@
     <p>{{user.last_name}}</p>
     <p>{{user.class_field}}</p>
     <a href="{% url 'user_logs' user.card_id%}">logs</a>
+
 {% else %}
     <p>No user with that id</p>
 {% endif %}

@@ -1,12 +1,12 @@
-<h1>User Leaderboard</h1>
+<h1>{{team.name}}</h1>
 <table>
     <tr>
         <th>Name</th>
-        <th>Time gained</th>
+        <th>Contribution</th>
     </tr>
     {% for user in users %}
     <tr>
-        <td><a href="{% url 'user' user.card_id %}">{{ user }}</a></td> 
+        <td>{{ user.first_name }} {{user.last_name}}</td>
         <td>{{ user.total_time_limited }}</td>
     </tr>
     {% endfor %}

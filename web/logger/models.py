@@ -1,5 +1,8 @@
 from django.db import models 
+from collections import defaultdict
 import datetime
+
+COMPETITION_START = "2017-11-10"
 
 # Create your models here.
 
@@ -14,6 +17,28 @@ class User(models.Model):
         total = datetime.timedelta(0)
         for log in self.timelog_set.filter(start_time__gt=datetime.datetime.today().date()):
             total += log.delta()
+        return total
+
+    # weekly time gained but limited to 200 min per day
+    def total_weekly_limited(self):
+        weeks = defaultdict(datetime.timedelta)
+        for log in self.timelog_set.filter(start_time__gt = datetime.datetime.strptime(COMPETITION_START, "%Y-%m-%d")):
+            week = log.start_time.strftime('%V')
+            current_time = weeks[week].seconds/60 #current time for this week in minutes
+            delta = log.delta()
+            print(week)
+            if current_time < 200 and delta != None:
+                if log.delta().seconds/60 < 200 - current_time:
+                    weeks[week] += delta
+                else:
+                    weeks[week] = datetime.timedelta(0,12000) #0 days 200 minutes
+        return weeks
+
+    # total time gained but limited to 200 min per day
+    def total_time_limited(self):
+        total = datetime.timedelta(0)
+        for week, time in self.total_weekly_limited().items():
+            total += time
         return total
 
     def __str__(self):
@@ -60,6 +85,13 @@ class Team(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)
     name = models.CharField(db_column='NAME', max_length=50)
     users = models.ManyToManyField(User, db_column='USERS')
+
+    # total time gained but limited to 200 min per day
+    def total_time_limited(self):
+        total_time = datetime.timedelta(0)
+        for user in self.users.all():
+            total_time += user.total_time_limited()
+        return total_time
 
     def __str__(self):
         return self.name

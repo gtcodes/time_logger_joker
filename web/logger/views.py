@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
+from django.utils.http import unquote
 from django.http import HttpResponse
 from django.template import loader
 
@@ -18,16 +19,21 @@ def index(request):
 
 @login_required(login_url='/admin/login/')
 def user(request, request_card_id):
+    print(request_card_id)
     user = get_object_or_404(User, card_id=request_card_id)
-    context = {'user': user,}
+    total_weekly = user.total_weekly_limited()
+    context = {
+        'user': user,
+        'weeks': total_weekly.items()
+    }
     return render(request, 'users/detail.html', context)
 
+#TODO: Sort users by time gained
 @login_required(login_url='/admin/login/')
 def users(request):
-    user_list = User.objects.all()
-    table = UserTable(user_list)
-    RequestConfig(request).configure(table)
-    context = {'table': table}
+    users = User.objects.all()
+    
+    context = {'users': users}
 
     return render(request, 'users/index.html', context)
 
@@ -103,9 +109,20 @@ def add_team(request):
 
     return render(request, 'teams/add.html', {'form': form})
 
+#TODO: Sort teams by time gained
 def teams(request):
     teams = Team.objects.all()
+    
     context = {
         'teams': teams,
     }
     return render(request, 'teams/index.html', context)
+
+def team_detail(request, request_team_name):
+    team = get_object_or_404(Team, name=unquote(request_team_name))
+    users = team.users.all()
+    context = {
+        'team': team,
+        'users': users
+    }
+    return render(request, 'teams/detail.html', context)
