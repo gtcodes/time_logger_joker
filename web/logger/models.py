@@ -2,7 +2,7 @@ from django.db import models
 from collections import defaultdict
 import datetime
 
-COMPETITION_START = "2017-11-10"
+COMPETITION_START = "2017-11-1"
 
 # Create your models here.
 
@@ -28,7 +28,7 @@ class User(models.Model):
             delta = log.delta()
             print(week)
             if current_time < 200 and delta != None:
-                if log.delta().seconds/60 < 200 - current_time:
+                if log.delta().seconds/60 < 200 - current_time and log.delta().days == 0:
                     weeks[week] += delta
                 else:
                     weeks[week] = datetime.timedelta(0,12000) #0 days 200 minutes
