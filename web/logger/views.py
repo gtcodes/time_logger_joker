@@ -32,8 +32,9 @@ def user(request, request_card_id):
 @login_required(login_url='/admin/login/')
 def users(request):
     users = User.objects.all()
+    users_sorted = sorted(users, key= lambda u:-u.total_time_limited())
     
-    context = {'users': users}
+    context = {'users': users_sorted}
 
     return render(request, 'users/index.html', context)
 
