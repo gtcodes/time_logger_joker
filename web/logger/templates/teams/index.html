@@ -3,11 +3,13 @@
     <tr>
         <th>Team name</th>
         <th>Time gained</th>
+        <th>links</th>
     </tr>
     {% for team in teams %}
     <tr>
-        <td><a href="{% url 'team_detail' team %}">{{ team }}</a></td> 
+        <td><h2>{{ team }}</h2></td> 
         <td>{{ team.total_time_limited }}</td>
+        <td><a href="{% url 'team_detail' team %}">list</a></td>
     </tr>
     {% endfor %}
 </table>

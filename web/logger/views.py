@@ -112,9 +112,10 @@ def add_team(request):
 #TODO: Sort teams by time gained
 def teams(request):
     teams = Team.objects.all()
+    teams_sorted = sorted(teams, key= lambda t: -t.total_time_limited())
     
     context = {
-        'teams': teams,
+        'teams': teams_sorted,
     }
     return render(request, 'teams/index.html', context)
 
