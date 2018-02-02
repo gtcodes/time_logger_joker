@@ -25,4 +25,6 @@ urlpatterns = [
     re_path('(?P<day>\d{4}-\d{1,2}-\d{1,2})', views.day, name='day'),
     path('', views.index, name='index'),
 
+    path('class/<str:name>/', views._class, name='class'),
+    path('class/', views._classes, name='classes'),
 ]

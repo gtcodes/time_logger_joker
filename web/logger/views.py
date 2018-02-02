@@ -157,4 +157,24 @@ def update_team(request, request_team_name):
             return HttpResponse(name + " updated")
         else: 
             return HttpResponse("form not valid " + str(form.errors))
-    
+
+@login_required(login_url='/admin/login')
+def _class(request, name):
+    class_name = unquote(name)
+    users = User.objects.all().filter(class_field=class_name)
+    users = sorted(users, key = lambda u:-u.total_time_limited())
+    context = {
+        'users': users,
+        'name': class_name,
+    }
+    return render(request, 'classes/detail.html', context)
+
+@login_required(login_url='/admin/login')
+def _classes(request):
+    classes = User.objects.all().values('class_field').distinct()
+    classes = sorted(classes, key = lambda c: c['class_field'])
+    context = {
+        'classes': classes
+    }
+    return render(request, 'classes/index.html', context)
+

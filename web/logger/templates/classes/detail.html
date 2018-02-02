@@ -1,0 +1,14 @@
+<h1>{{name}} leaderboard</h1>
+
+<table>
+    <tr>
+        <th>User</th>
+        <th>Time</th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <td>{{user.first_name}}</td>
+            <td>{{user.total_time_limited}}</td>
+        </tr>
+    {% endfor %}
+</table>
