@@ -1,5 +1,6 @@
 {% include 'partials/navigation.html' %}
 <h1>Team Leaderboard</h1>
+<a href="{% url 'add_team' %}">Add team</a>
 <table>
     <tr>
         <th>Team name</th>
@@ -10,7 +11,7 @@
     <tr>
         <td><h2>{{ team }}</h2></td> 
         <td>{{ team.total_time_limited }}</td>
-        <td><a href="{% url 'team_detail' team %}">list</a></td>
+        <td><a href="{% url 'team_detail' team %}">show</a> <a href="{% url 'edit_team' team %}">edit</a></td>
     </tr>
     {% endfor %}
 </table>
