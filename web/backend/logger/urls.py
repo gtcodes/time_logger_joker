@@ -1,10 +1,14 @@
 from django.conf.urls import include
 from django.urls import path, re_path
 from django.contrib.auth import views as auth_views
+from rest_framework.authtoken import views as drf_views
 
 from . import views
 
 urlpatterns = [
+    # auth
+    path('auth/', drf_views.obtain_auth_token, name='auth'),
+
     # user paths
     re_path('user/(?P<request_card_id>[0-9]+)/logs/', views.logs, name='user_logs'),
     re_path('user/(?P<request_card_id>[0-9]+)/', views.user, name='user'),
