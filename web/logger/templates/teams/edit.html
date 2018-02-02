@@ -5,7 +5,7 @@
 <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
 {{ form.media }}
 
-<form action="{% url 'add_team' %}" method="post">
+<form action="{% url 'update_team' team %}" method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Submit" />

@@ -4,7 +4,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 class TeamForm(forms.Form):    
     
-    name = forms.CharField(label='Name', max_length=50)
+    name = forms.CharField(max_length=50)
     users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=FilteredSelectMultiple("Members", is_stacked=False))
     
     def save(self, commit=True):

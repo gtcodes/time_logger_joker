@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
-from django.utils.http import unquote
+from urllib.parse import unquote, quote
 from django.http import HttpResponse
 from django.template import loader
+from django.forms import formset_factory
 
 from .models import Timelog, User, Team
 from .tables import UserTable, DayTable
@@ -28,7 +29,6 @@ def user(request, request_card_id):
     }
     return render(request, 'users/detail.html', context)
 
-#TODO: Sort users by time gained
 @login_required(login_url='/admin/login/')
 def users(request):
     users = User.objects.all()
@@ -110,7 +110,7 @@ def add_team(request):
 
     return render(request, 'teams/add.html', {'form': form})
 
-#TODO: Sort teams by time gained
+@login_required(login_url='/admin/login/')
 def teams(request):
     teams = Team.objects.all()
     teams_sorted = sorted(teams, key= lambda t: -t.total_time_limited())
@@ -120,6 +120,7 @@ def teams(request):
     }
     return render(request, 'teams/index.html', context)
 
+@login_required(login_url='/admin/login/')
 def team_detail(request, request_team_name):
     team = get_object_or_404(Team, name=unquote(request_team_name))
     users = team.users.all()
@@ -128,3 +129,32 @@ def team_detail(request, request_team_name):
         'users': users
     }
     return render(request, 'teams/detail.html', context)
+
+@login_required(login_url='/admin/login/')
+def edit_team(request, request_team_name):
+    team = get_object_or_404(Team, name=unquote(request_team_name))
+    form = TeamForm(initial={
+        'name': team.name,
+        'Members': team.users,
+    })
+    context = {
+        'team': team,
+        'form': form,
+    }
+    return render(request, 'teams/edit.html', context)
+
+@login_required(login_url='/admin/login/')
+def update_team(request, request_team_name):
+    if request.method == 'POST':
+        team = get_object_or_404(Team, name=unquote(request_team_name))
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            users = form.cleaned_data['users']
+            team.name = name
+            team.users.set(users)
+            team.save()
+            return HttpResponse(name + " updated")
+        else: 
+            return HttpResponse("form not valid " + str(form.errors))
+    
