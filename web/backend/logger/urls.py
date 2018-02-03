@@ -6,8 +6,10 @@ from rest_framework.authtoken import views as drf_views
 from . import views
 
 urlpatterns = [
-    # auth
-    path('auth/', drf_views.obtain_auth_token, name='auth'),
+    # api
+    path('api/', include([
+        path('auth/', drf_views.obtain_auth_token, name='auth'),
+    ])),
 
     # user paths
     re_path('user/(?P<request_card_id>[0-9]+)/logs/', views.logs, name='user_logs'),
