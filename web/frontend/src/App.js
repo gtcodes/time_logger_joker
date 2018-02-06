@@ -3,6 +3,9 @@ import { login } from './util/Auth';
 import logo from './logo.svg';
 import store from './store';
 import './App.css';
+import { Login } from './Login';
+import { Logger } from './Logger';
+import { Route, Switch } from 'react-router-dom';
 
 class App extends Component {
   constructor(props) {
@@ -15,15 +18,13 @@ class App extends Component {
   render() {
       const lIn = this.state.token;
       return (
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
-          <p className="App-intro">
-            The user is logged in {lIn}
-          </p>
-        </div>
+          <div>
+            <Switch>
+              <Route exact path="/" render={() => <h1>Home</h1>} />
+              <Route path="/today" component={Logger} />
+              <Route path="/login" component={Login} />
+            </Switch>
+          </div>
       );
   }
 }

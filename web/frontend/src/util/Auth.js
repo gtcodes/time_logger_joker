@@ -11,13 +11,15 @@ export function InvalidCredentialsException(message) {
 
 export function login(username, password) {
     axios.defaults.withCredentials = true;
+    console.log("in auth " + username + " " + password);
     return axios
-        .post(URL + LOGIN, {
+        .post('/logger/auth', {
             username,
             password
         })
         .then(function(response) {
             store.dispatch(setToken(response.data.token));
+            console.log("done!");
         })
         .catch(function(error) {
             if (_.get(error, 'response.status') === 400) {

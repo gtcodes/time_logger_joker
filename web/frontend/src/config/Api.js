@@ -1,2 +1,2 @@
 export const URL = "/logger/api";
-export const LOGIN = "/auth/";
+export const LOGIN = "/auth";
