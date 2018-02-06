@@ -1,15 +1,19 @@
-from django.conf.urls import include
+from django.conf.urls import include, url
 from django.urls import path, re_path
 from django.contrib.auth import views as auth_views
+from rest_framework import routers
 from rest_framework.authtoken import views as drf_views
+from logger import viewsapi
+from logger import views
 
-from . import views
+router = routers.DefaultRouter()
+router.register('users', viewsapi.ListUsers)
 
 urlpatterns = [
+
     # api
-    path('api/', include([
-        path('auth/', drf_views.obtain_auth_token, name='auth'),
-    ])),
+    path('api/', include(router.urls)),
+    path('auth/', drf_views.obtain_auth_token, name='auth'),
 
     # user paths
     re_path('user/(?P<request_card_id>[0-9]+)/logs/', views.logs, name='user_logs'),
