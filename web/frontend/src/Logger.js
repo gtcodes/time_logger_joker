@@ -9,18 +9,13 @@ export class Logger extends Component {
         super(props);
         this.state = {
             attendees: null,
-            api: null
+            api: apiClient()
         };
-    }
-
-    componentDidMount() {
-        console.log("aonteaotsesthaeuoshtn");
-        this.setState({api: apiClient()});
         this.get_api_attendees();
     }
 
     get_api_attendees() {
-        return axios.get("/logger/api/users.json")
+        return this.state.api.get("/users.json")
             .then((resp) => {
                 console.log("response got");
                 console.log(resp.data);
