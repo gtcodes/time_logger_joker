@@ -166,10 +166,12 @@ def logTime(uid):
         if (endtime is None):
             # does not allow time logs of 1 second or less
             # to stop users accidentally signing off
-            if((datetime.now()-starttime).seconds > 1):
-                db.updateTimeLog(str(logID))
-                print("Time finished for " + first_name + " " + last_name
-                        + "\nTime gained: " + str(datetime.now()-starttime).split('.')[0])
+            if((datetime.now()-starttime).seconds < 30):
+                if(input("Are you sure you wish to logout? y/N") != 'y'):
+                    return;
+            db.updateTimeLog(str(logID))
+            print("Time finished for " + first_name + " " + last_name
+                    + "\nTime gained: " + str(datetime.now()-starttime).split('.')[0])
         else: 
             db.startTime(str(cardID))
             print("Time started for " + first_name + " " + last_name 
