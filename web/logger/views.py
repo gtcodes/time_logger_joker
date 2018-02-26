@@ -52,7 +52,7 @@ def day(request, day):
     if (request.POST.get('endAll') and request.user.is_authenticated):
         Timelog.objects.filter(end_time=None).update(end_time=F('start_time'))
     elif (request.POST.get('endToday') and request.user.is_authenticated):
-        Timelog.objects.filter(end_time=None, start_time__gt=day).update(end_time=F('start_time'))
+        Timelog.objects.filter(end_time=None, start_time__gt=day, start_time__lt=day+timedelta(1)).update(end_time=F('start_time'))
     else:
         redirect('%s?next=%s' % ('/admin/login/', request.path))
 
@@ -85,6 +85,7 @@ def day(request, day):
     context = {
         'next_day': str(next_day),
         'previous_day': str(prev_day),
+        'today': day,
         'table': table,
     }
 
