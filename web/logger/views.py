@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.forms import formset_factory
 
-from .models import Timelog, User, Team
+from .models import Timelog, User, Team, COMPETITION_START
 from .tables import UserTable, DayTable
 from .forms import TeamForm
 
@@ -34,10 +34,11 @@ def user(request, request_card_id):
 def users(request):
     users = User.objects.all()
     users_sorted = sorted(users, key= lambda u:-u.total_time_limited())
-    
+    print (COMPETITION_START)
     context = {
         'users': users_sorted,
-        'title': "Users"
+        'title': "Users",
+        'comp_start': COMPETITION_START
     }
 
     return render(request, 'users/index.html', context)
@@ -127,7 +128,8 @@ def teams(request):
     
     context = {
         'teams': teams_sorted,
-        'title': "Teams"
+        'title': "Teams",
+        'comp_start': COMPETITION_START
     }
     return render(request, 'teams/index.html', context)
 

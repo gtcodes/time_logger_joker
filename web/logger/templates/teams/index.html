@@ -1,6 +1,7 @@
 {% extends "main.html" %}
 {% block "content" %}
 <h1>Team Leaderboard</h1>
+<h2>Time gained since {{ comp_start }}</h2>
 <a href="{% url 'add_team' %}">Add team</a>
 <table>
     <tr>
