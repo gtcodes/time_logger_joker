@@ -1,0 +1,19 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    {% block "head" %}{% endblock %}
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+    <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+</head>
+<body>
+    <div id="container">
+        {% include 'partials/navigation.html' %}
+        <div id="content" class="colm5">
+            {% block "content" %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>

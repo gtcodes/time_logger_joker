@@ -1,4 +1,5 @@
-{% include 'partials/navigation.html' %}
+{% extends "main.html" %}
+{% block "content" %}
 <h1>{{name}} leaderboard</h1>
 
 <table>
@@ -7,9 +8,10 @@
         <th>Time</th>
     </tr>
     {% for user in users %}
-        <tr>
-            <td>{{user.first_name}}</td>
-            <td>{{user.total_time_limited}}</td>
-        </tr>
+    <tr>
+        <td>{{user.first_name}}</td>
+        <td>{{user.total_time_limited}}</td>
+    </tr>
     {% endfor %}
 </table>
+{% endblock %}

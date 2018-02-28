@@ -1,9 +1,5 @@
-{% include 'partials/navigation.html' %}
-<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css">
-<link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
-<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
-<script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
-<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+{% extends "main.html" %}
+{% block "content" %}
 {{ form.media }}
 
 <form action="{% url 'update_team' team %}" method="post">
@@ -11,3 +7,4 @@
     {{ form }}
     <input type="submit" value="Submit" />
 </form>
+{% endblock %}

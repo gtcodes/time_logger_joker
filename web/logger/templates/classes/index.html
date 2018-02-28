@@ -1,7 +1,9 @@
-{% include 'partials/navigation.html' %}
+{% extends "main.html" %}
+{% block "content" %}
 <h1>Classes</h1>
 <ul style="list-style: none;">
     {% for class in classes %}
-        <li><b><a href="{% url 'class' class.class_field %}">{{class.class_field}}</a></b></li>
+    <li><b><a href="{% url 'class' class.class_field %}">{{class.class_field}}</a></b></li>
     {% endfor %}
 </ul>
+{% endblock %}
