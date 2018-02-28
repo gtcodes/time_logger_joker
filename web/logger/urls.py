@@ -13,7 +13,7 @@ urlpatterns = [
     # team paths
     path('team/', include([
         path('add/', views.add_team, name='add_team'),
-        re_path('(?P<request_team_name>[0-9A-Za-z\!\?\#\(\)\-\_\+\$\<\>\,\.\'\%\& ]+)/', include([
+        re_path('(?P<request_team_name>[0-9A-Za-z\!\?\#\(\)\-\_\+\$\<\>\,\.\'\%\&\@ ]+)/', include([
             path('edit/', views.edit_team, name='edit_team'),
             path('update/', views.update_team, name='update_team'),
             path('', views.team_detail, name='team_detail'),
