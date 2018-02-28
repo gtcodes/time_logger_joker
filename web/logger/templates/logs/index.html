@@ -1,4 +1,8 @@
 {% extends "main.html" %}
+{% block "title" %}
+Logs today
+{% endblock %}
+
 {% block "content" %}
 {% if previous_day %}
 <a href="{% url 'day' previous_day %}">previous day</a>

@@ -25,7 +25,8 @@ def user(request, request_card_id):
     total_weekly = user.total_weekly_limited()
     context = {
         'user': user,
-        'weeks': total_weekly.items()
+        'weeks': total_weekly.items(),
+        'title': "User info"
     }
     return render(request, 'users/detail.html', context)
 
@@ -34,7 +35,10 @@ def users(request):
     users = User.objects.all()
     users_sorted = sorted(users, key= lambda u:-u.total_time_limited())
     
-    context = {'users': users_sorted}
+    context = {
+        'users': users_sorted,
+        'title': "Users"
+    }
 
     return render(request, 'users/index.html', context)
 
@@ -87,6 +91,7 @@ def day(request, day):
         'previous_day': str(prev_day),
         'today': day,
         'table': table,
+        'title': "Logs Today"
     }
 
     return render(request, 'logs/index.html', context)
@@ -109,7 +114,11 @@ def add_team(request):
     else: 
         form = TeamForm()
 
-    return render(request, 'teams/add.html', {'form': form})
+    context = {
+        'form': form,
+        'title': "Add team"
+    }
+    return render(request, 'teams/add.html', context)
 
 @login_required(login_url='/admin/login/')
 def teams(request):
@@ -118,6 +127,7 @@ def teams(request):
     
     context = {
         'teams': teams_sorted,
+        'title': "Teams"
     }
     return render(request, 'teams/index.html', context)
 
@@ -127,7 +137,8 @@ def team_detail(request, request_team_name):
     users = team.users.all()
     context = {
         'team': team,
-        'users': users
+        'users': users,
+        'title': "Team info"
     }
     return render(request, 'teams/detail.html', context)
 
@@ -141,6 +152,7 @@ def edit_team(request, request_team_name):
     context = {
         'team': team,
         'form': form,
+        'title': "Edit team"
     }
     return render(request, 'teams/edit.html', context)
 
@@ -167,6 +179,7 @@ def _class(request, name):
     context = {
         'users': users,
         'name': class_name,
+        'title': "Class info " + class_name,
     }
     return render(request, 'classes/detail.html', context)
 
@@ -175,7 +188,8 @@ def _classes(request):
     classes = User.objects.all().values('class_field').distinct()
     classes = sorted(classes, key = lambda c: c['class_field'])
     context = {
-        'classes': classes
+        'classes': classes,
+        'title': "Classes"
     }
     return render(request, 'classes/index.html', context)
 
