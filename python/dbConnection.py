@@ -38,14 +38,10 @@ def selectUserById(cardID):
     selectQuery = "SELECT * FROM USER WHERE CARD_ID = " + cardID
     if(DEBUG):
         print(selectQuery)
-    try:
-        # Execute the SQL command
-        cursor.execute(selectQuery)
-        # Fetch all the rows in a list of lists.
-        result = cursor.fetchone()
-        return(result)
-    except:
-       print ("Error: unable to fecth data")
+    doQuery(selectQuery)
+    # Return all the rows in a list of lists.
+    result = cursor.fetchone()
+    return(result)
     
 def selectUserByName(firstName, lastName):
     selectQuery = "SELECT * FROM USER" + \
@@ -79,7 +75,7 @@ def getTotalTimeOfUser(cardId):
     selectQuery = "SELECT * FROM TIMELOG WHERE CARD_ID = " + str(cardId) + ";"
     try:
         cursor.execute(selectQuery)
-        result = cursor.fetchall();
+        result = cursor.fetchall()
         print (result)
         return result
     except:
@@ -109,12 +105,34 @@ def deleteOldTimeLogs(minutes):
 
 def commit(query):
     try:
-        cursor.execute(query)
+        doQuery(query)
         db.commit()
     except:
         #might want rollback on some failues?
         #TODO handle errors better
-        print ("Error: we failed to send query " + query)
+        print ("Error: we failed to commit query " + query)
+
+def doQuery(query):
+    triedReconnect = 0
+    while (1):
+        try:
+            # Execute the SQL command
+            cursor.execute(query)
+            return 1
+        except: # Probably timed-out connection to DB
+            if(triedReconnect < 1):
+                reconnect()
+                triedReconnect += 1
+            else:
+                print("Error: Failed to send query. Is the database running?")
+                return 0
+
+def reconnect():
+    # Change globals, do not make locals
+    global db
+    global cursor
+    db = MySQLdb.connect(settings.host,settings.userName,settings.password,settings.dbName)
+    cursor = db.cursor()
 
 def close():
     db.close()

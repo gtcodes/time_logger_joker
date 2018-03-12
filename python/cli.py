@@ -90,7 +90,7 @@ def editUser():
         print("     Admin: " + str(is_admin))
     
     except TypeError as e:
-        print(e.message)
+        print(e)
         print("User not found")
     input("Press enter to continue")
     clearScreen()
@@ -145,7 +145,7 @@ def timeLoggingLoop():
             try:
                 logTime(uid)
             except TypeError as e: 
-                #print (e.message)
+                #print (e)
                 print ("No user with that card ID")
                 choice = input("Would you like to register a new user? (Y/n)")
                 if (choice.lower() == "y" or choice == ""):
@@ -168,7 +168,7 @@ def logTime(uid):
             # to stop users accidentally signing off
             if((datetime.now()-starttime).seconds < 30):
                 if(input("Are you sure you wish to logout? y/N") != 'y'):
-                    return;
+                    return
             db.updateTimeLog(str(logID))
             print("Time finished for " + first_name + " " + last_name
                     + "\nTime gained: " + str(datetime.now()-starttime).split('.')[0])
