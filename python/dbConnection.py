@@ -87,10 +87,7 @@ def doQuery(query):
                 return 0
 
 def userExists(userID):
-    if(selectUserById(userID) is None): 
-        return(False)
-    else: 
-        return(True)
+    return selectUserById(userID) is not None
 
 def reconnect():
     # Update globals, do not make locals
