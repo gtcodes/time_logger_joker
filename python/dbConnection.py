@@ -33,54 +33,22 @@ def startTime(cardId):
             "VALUES (" + cardId + ", NOW());"
     commit(insertQuery)
 
-#TODO refactor select to be less duplicated
 def selectUserById(cardID):
     selectQuery = "SELECT * FROM USER WHERE CARD_ID = " + cardID
-    if(DEBUG):
-        print(selectQuery)
     doQuery(selectQuery)
     # Return all the rows in a list of lists.
     result = cursor.fetchone()
     return(result)
-    
-def selectUserByName(firstName, lastName):
-    selectQuery = "SELECT * FROM USER" + \
-            " WHERE FIRST_NAME = '%s' AND LAST_NAME = '%s'" \
-            % (firstName, lastName)
-    if(DEBUG):
-        print(selectQuery)
-    try:
-       # Execute the SQL command
-       cursor.execute(selectQuery)
-       # Fetch all the rows in a list of lists.
-       result = cursor.fetchone()
-       return(result)
-    except:
-        print ("Error: unable to fetch user by name: " \
-                + firstName + " " + lastName)
 
 def selectTimeLog(cardId):
     selectQuery = "SELECT * FROM TIMELOG WHERE CARD_ID = "\
             + str(cardId) + " ORDER BY START_TIME DESC;"
     if(DEBUG):
         print(selectQuery)
-    try:
-        cursor.execute(selectQuery)
-        result = cursor.fetchone()
-        return(result)
-    except:
-        print ("Error: unable to fetch timeLog from user " + str(cardId))
+    doQuery(selectQuery)
+    result = cursor.fetchone()
+    return(result)
 
-def getTotalTimeOfUser(cardId):
-    selectQuery = "SELECT * FROM TIMELOG WHERE CARD_ID = " + str(cardId) + ";"
-    try:
-        cursor.execute(selectQuery)
-        result = cursor.fetchall()
-        print (result)
-        return result
-    except:
-        print ("Error: unable to fetch all timelogs from user " + str(cardId))
-    
 def updateTimeLog(logId):
     updateQuery = "update TIMELOG set END_TIME = NOW() where ID = "\
             + logId + ";"
@@ -90,18 +58,6 @@ def updateUser(userID, first_name, last_name, class_name, is_admin):
     updateQuery = "update USER set FIRST_NAME='%s', LAST_NAME='%s', CLASS='%s',\
          IS_ADMIN=%d where CARD_ID=%d" % (first_name, last_name, class_name, is_admin, userID)
     commit(updateQuery)
-
-def deleteClass(className):
-    deleteQuery = "DELETE FROM USER WHERE CLASS = " + className + ";"
-    commit(deleteQuery)
-
-def deleteUser(userID):
-    deleteQuery = "DELETE FROM USER WHERE CARD_ID = %d" % (userID)
-    commit(deleteQuery)
-
-def deleteOldTimeLogs(minutes):
-    deleteQuery = "DELETE FROM TIMELOG WHERE END_TIME IS NULL AND START_TIME < DATE_ADD(NOW(), INTERVAL -" + str(minutes) + " MINUTE);"
-    commit(deleteQuery)
 
 def commit(query):
     try:
@@ -114,6 +70,8 @@ def commit(query):
 
 def doQuery(query):
     triedReconnect = 0
+    if(DEBUG):
+        print("Sending query: " + query)
     while (1):
         try:
             # Execute the SQL command
@@ -121,6 +79,7 @@ def doQuery(query):
             return 1
         except: # Probably timed-out connection to DB
             if(triedReconnect < 1):
+                if DEBUG: print("Failed initial query, trying to reconnect to db...")
                 reconnect()
                 triedReconnect += 1
             else:
@@ -128,7 +87,7 @@ def doQuery(query):
                 return 0
 
 def reconnect():
-    # Change globals, do not make locals
+    # Update globals, do not make locals
     global db
     global cursor
     db = MySQLdb.connect(settings.host,settings.userName,settings.password,settings.dbName)
