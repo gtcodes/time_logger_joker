@@ -111,10 +111,13 @@ def readCardNumber(message):
     return cleanedCardId
 
 def registerUserWithCardID(cardID):
-    firstName = input("Enter first name:")
-    lastName = input("Enter last name:")
-    className = input("Enter class:")
-    db.insertUser(cardID, firstName, lastName, className)
+    if(db.userExists(cardID)):
+        print("User with that cardID already exists, aborting \n")
+    else:
+        firstName = input("Enter first name:")
+        lastName = input("Enter last name:")
+        className = input("Enter class:")
+        db.insertUser(cardID, firstName, lastName, className)
 
 def registerUser():
     cardID = -1

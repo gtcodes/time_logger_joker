@@ -86,6 +86,12 @@ def doQuery(query):
                 print("Error: Failed to send query. Is the database running?")
                 return 0
 
+def userExists(userID):
+    if(selectUserById(userID) is None): 
+        return(False)
+    else: 
+        return(True)
+
 def reconnect():
     # Update globals, do not make locals
     global db
