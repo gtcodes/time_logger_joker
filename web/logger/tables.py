@@ -1,5 +1,6 @@
 from django.utils.html import format_html
 from logger.models import User
+from functools import reduce
 import django_tables2 as tables
 import math
 import datetime
@@ -15,6 +16,8 @@ class UserTable(tables.Table):
 class DayTable(tables.Table):
     user = tables.Column(order_by=('user.last_name', 'user.first_name'))
     attendance = tables.Column()
+    starttimes = tables.Column()
+    endtimes = tables.Column()
     
     def render_user(self, value):
         return format_html('<a href="{}">{}</a>', 
@@ -26,3 +29,9 @@ class DayTable(tables.Table):
             return math.floor(value.seconds/60)
         else: 
             return value
+
+    def render_starttimes(self, value):
+        return reduce((lambda x,y: (x.strftime("%H:%M:%S") if not isinstance(x, str) else x) + ",  " + (y.strftime("%H:%M:%S") if not isinstance(y, str) else y)), value)
+    
+    def render_endtimes(self, value):
+        return reduce((lambda x,y: (x.strftime("%H:%M:%S") if not isinstance(x, str) else x) + ",  " + (y.strftime("%H:%M:%S") if not isinstance(y, str) else y)), value)

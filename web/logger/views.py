@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from django_tables2 import RequestConfig
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+import json
 
 @login_required(login_url='/admin/login/')
 def index(request):
@@ -69,16 +70,24 @@ def day(request, day):
     for log in log_list:
         log.user.first_name = log.user.first_name.capitalize()
         log.user.last_name = log.user.last_name.capitalize()
-        if log.end_time != None:
-            if log.user in logdict:
-                logdict[log.user] += log.delta()
-            else:
-                logdict[log.user] = log.delta()
+
+        if log.end_time == None:
+            endtime = "Did not check out"
+            delta = timedelta(0)
         else:
-            logdict[log.user] = "Did not check out"
+            endtime = log.end_time
+            delta = log.delta()
+
+        if log.user in logdict:
+            logdict[log.user]["att"] += delta
+            logdict[log.user]["starttimes"].append(log.start_time)
+            logdict[log.user]["endtimes"].append(endtime) 
+        else:
+            logdict[log.user] = {"att": log.delta(), "starttimes": [log.start_time], "endtimes": [endtime]}
     
+    print(str(logdict))
     # prepare the table 
-    tab_dict = [{"user": usr, "attendance": abse} for usr, abse in logdict.items()]
+    tab_dict = [{"user": usr, "attendance": data["att"], "starttimes": data["starttimes"], "endtimes": data["endtimes"]} for usr, data in logdict.items()]
 
     table = DayTable(tab_dict)
     RequestConfig(request, paginate={'per_page': 100}).configure(table)
