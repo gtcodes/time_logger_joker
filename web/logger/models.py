@@ -25,11 +25,10 @@ class User(models.Model):
         for log in self.timelog_set.filter(start_time__gt = datetime.datetime.strptime(COMPETITION_START, "%Y-%m-%d")):
             week = log.start_time.strftime('%V')
             current_time = weeks[week].seconds/60 #current time for this week in minutes
-            delta = log.delta()
             print(week)
-            if current_time < 200 and delta != None:
+            if current_time < 200 and log.end_time != None:
                 if log.delta().seconds/60 < 200 - current_time and log.delta().days == 0:
-                    weeks[week] += delta
+                    weeks[week] += log.delta()
                 else:
                     weeks[week] = datetime.timedelta(0,12000) #0 days 200 minutes
         return weeks
@@ -70,6 +69,7 @@ class Timelog(models.Model):
     def delta(self):
         if self.end_time != None:
             return self.end_time - self.start_time
+        return datetime.timedelta(0)
 
     def __str__(self):
             return "id: " + str(self.id) + \
