@@ -21,4 +21,37 @@ Logs today
 
 {% load render_table from django_tables2 %}
 {% render_table table %}
+
+{% if searchResult %}
+<table>
+    <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Card id</th>
+        <th>Class</th>
+    </tr>
+    {% for user in searchResult %}
+    <tr>
+        <td>{{user.first_name}}</td>
+        <td>{{user.last_name}}</td>
+        <td>{{user.card_id}}</td>
+        <td>{{user.class_name}}</td>
+        <td> 
+            <form action="{% url 'day' day=today %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="addLogId" value="{{user.card_id}}">
+                <input type="submit" class="btn" value="Add log" name="addLog">
+            </form>            
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<form action="{% url 'day' day=today %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="searchName">
+    <input type="submit" class="btn" value="Search User" name="searchUser">
+</form>
+
 {% endblock %}

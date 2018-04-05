@@ -46,6 +46,11 @@ def users(request):
 
 @login_required(login_url='/admin/login/')
 def logs(request, request_card_id):
+    if (request.POST.get("endLog") and request.user.is_authenticated):
+        log = Timelog.objects.get(id=request.POST.get("endLogId"))
+        log.end_time = datetime.now()
+        log.save()
+
     log_list = Timelog.objects.all().filter(user=request_card_id)
     context = {'log_list': log_list,}
 
@@ -54,11 +59,20 @@ def logs(request, request_card_id):
 @login_required(login_url='/admin/login/')
 def day(request, day):
     day = datetime.strptime(day,'%Y-%m-%d').replace(hour=0, minute=0, second=0, microsecond=0)
-
+    searchResult = None
     if (request.POST.get('endAll') and request.user.is_authenticated):
         Timelog.objects.filter(end_time=None).update(end_time=F('start_time'))
     elif (request.POST.get('endToday') and request.user.is_authenticated):
         Timelog.objects.filter(end_time=None, start_time__gt=day, start_time__lt=day+timedelta(1)).update(end_time=F('start_time'))
+    elif (request.POST.get('searchUser') and request.user.is_authenticated):
+        searchResult = User.objects.filter(first_name = request.POST.get('searchName'))
+    elif (request.POST.get('addLog') and request.user.is_authenticated):
+        log = Timelog()
+        log.user = User.objects.get(card_id = request.POST.get('addLogId'))
+        log.start_time = datetime.now()
+        log.save()
+    elif (request.POST.get('endLog') and request.user.is_authenticated):
+        log = Timelog.objects.get(id)
     else:
         redirect('%s?next=%s' % ('/admin/login/', request.path))
 
@@ -79,13 +93,12 @@ def day(request, day):
             delta = log.delta()
 
         if log.user in logdict:
-            logdict[log.user]["att"] += delta
+            logdict[log.user]["att"] += int(delta.total_seconds()/60)
             logdict[log.user]["starttimes"].append(log.start_time)
             logdict[log.user]["endtimes"].append(endtime) 
         else:
-            logdict[log.user] = {"att": log.delta(), "starttimes": [log.start_time], "endtimes": [endtime]}
+            logdict[log.user] = {"att": int(log.delta().total_seconds()/60), "starttimes": [log.start_time], "endtimes": [endtime]}
     
-    print(str(logdict))
     # prepare the table 
     tab_dict = [{"user": usr, "attendance": data["att"], "starttimes": data["starttimes"], "endtimes": data["endtimes"]} for usr, data in logdict.items()]
 
@@ -101,6 +114,7 @@ def day(request, day):
         'previous_day': str(prev_day),
         'today': day,
         'table': table,
+        'searchResult': searchResult,
         'title': "Logs Today"
     }
 
