@@ -12,15 +12,16 @@
         <td><a href="{% url 'user' log.user.card_id %}">{{log.user.first_name}}</a></td>                
         <td>{{log.start_time}}</td>
         <td>{{log.end_time}}</td>
-        {% if log.end_time == None %}
         <td>
             <form action="{% url 'user_logs' request_card_id=log.user.card_id %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="endLogId" value="{{ log.id }}">
+                <input type="submit" class="btn" value="Delete log" name="deleteLog">
+                {% if log.end_time == None %}
                 <input type="submit" class="btn" value="End log" name="endLog">
+                {% endif %}
             </form>
         </td>
-        {% endif %}
     </tr>
     {% endfor %}
 </table>

@@ -50,6 +50,9 @@ def logs(request, request_card_id):
         log = Timelog.objects.get(id=request.POST.get("endLogId"))
         log.end_time = datetime.now()
         log.save()
+    elif (request.POST.get("deleteLog") and request.user.is_authenticated):
+        log = Timelog.objects.get(id=request.POST.get("endLogId"))
+        log.delete()
 
     log_list = Timelog.objects.all().filter(user=request_card_id)
     context = {'log_list': log_list,}
