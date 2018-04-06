@@ -74,8 +74,6 @@ def day(request, day):
         log.user = User.objects.get(card_id = request.POST.get('addLogId'))
         log.start_time = datetime.now()
         log.save()
-    elif (request.POST.get('endLog') and request.user.is_authenticated):
-        log = Timelog.objects.get(id)
     else:
         redirect('%s?next=%s' % ('/admin/login/', request.path))
 
