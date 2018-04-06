@@ -35,7 +35,7 @@ Logs today
         <td>{{user.first_name}}</td>
         <td>{{user.last_name}}</td>
         <td>{{user.card_id}}</td>
-        <td>{{user.class_name}}</td>
+        <td>{{user.class_field}}</td>
         <td> 
             <form action="{% url 'day' day=today %}" method="post">
                 {% csrf_token %}
