@@ -99,7 +99,11 @@ def readCardNumber(message):
     cardId = input(message)
     if (cardId == 'q'): return 'q'
     try:
-        number = toDecimalNumber(cardId)
+        cleanedCardId = pruneCardIdInput(cardId)
+        numberLong = toDecimalNumber(cleanedCardId)
+        #second prune to make sure all ids are 9 decimal digits for mysql
+        number = pruneCardIdInput(numberLong)       
+        print(number)
     except ValueError:
         return -1
     clearScreen()
@@ -107,8 +111,7 @@ def readCardNumber(message):
     time.sleep(3)
     tcflush(sys.stdin, TCIFLUSH)
     clearScreen()
-    cleanedCardId = pruneCardIdInput(number)
-    return cleanedCardId
+    return number
 
 def registerUserWithCardID(cardID):
     if(db.userExists(cardID)):
