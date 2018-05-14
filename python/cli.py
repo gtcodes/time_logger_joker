@@ -12,41 +12,41 @@ ADMIN_PASS = "ac7e43315375cea929bac587054782f379b535a479ca84635fdb4790cea39c7e"
 
 def login():
     while(1):
-        print("Logging disabled, admin login required")
+        print("tidsstämpling avstängt. En lärare måste låsa upp systemet")
         if(isAdmin()):
             readId()
 
 def isAdmin():
-    cardId = readCardNumber("Card id: ")
+    cardId = readCardNumber("Kort nummer: ")
     if(cardId != -1):
         try: 
             (_,_,_,_,admin) = db.selectUserById(cardId)
-            passWord = getpass.getpass("Password: ")
+            passWord = getpass.getpass("Lösenord: ")
             byteEncodedPass = passWord.encode()
             passWordHash = hashlib.sha256(byteEncodedPass).hexdigest()
             if (admin and passWordHash == ADMIN_PASS): #LAZY POWAAA
                 clearScreen()
                 return(True)
             else:
-                print ("Sorry, that did not work.")
+                print ("Det gick tyvärr inte.")
                 time.sleep(1.5)
         except TypeError:
-            print ("could not use card " + cardId)
-            print ("Please try again")
+            print ("Kortnummret " + cardId + " kunde inte användas")
+            print ("Försök igen")
             time.sleep(1.5)
         clearScreen()
     else:
-        print("Invalid card number")
+        print("Ogiltigt kortnummer")
     return(False)
 
 def readId():
     while(1):
-        cmd = input("What would you like to do?\n"+
-                    " t - Log time\n" + 
-                    " r - Register a new user\n" +
+        cmd = input("Vad vill du göra??\n"+
+                    " t - Tidsstämpla\n" + 
+                    " r - Registrera en ny användare\n" +
                     #" e - Edit a user\n" +
-                    " d - Disable logging\n"
-                    " q - Quit\n")
+                    " d - Stäng av tidsstämpling\n"
+                    " q - Avsluta \n")
     
         if (cmd == 't'):
             timeLoggingLoop()
@@ -59,21 +59,21 @@ def readId():
         elif (cmd == 'd' and isAdmin()):
             return 0
         elif (cmd == 'q'):
-            os.system("echo 'Bye!' | cowsay -d" )
+            os.system("echo 'Hejdå!' | cowsay -d" )
             time.sleep(1.0)
             sys.exit(0)
         else:
-            print ("\nCommand not recognized, please try again\n\n")
+            print ("\nKände inte igen instruktionen, försök igen\n\n")
 
 def editUser():
-    cardID = readCardNumber("Enter cardID for the user to edit:")
+    cardID = readCardNumber("Skanna kort för användaren som skall ändras: ")
     print(cardID)
     try:
         (cardID, first_name, last_name, class_name, is_admin) = db.selectUserById(str(cardID))
-        fninp = input("First name(" + first_name + "): ")
-        lninp = input("Last name(" + last_name + "): ")
-        cninp = input("Class name(" + class_name + "): ")
-        adinp = input("Admin (" + str(bool(is_admin)) + "): ")
+        fninp = input("Förnamn("   + first_name + "): ")
+        lninp = input("Efternamn(" + last_name + "): ")
+        cninp = input("Klass("     + class_name + "): ")
+        adinp = input("Administratör? (" + str(bool(is_admin)) + "): ")
         first_name = fninp if fninp != '' else first_name
         last_name = lninp if lninp != '' else last_name
         class_name = cninp if cninp != '' else class_name
@@ -82,17 +82,17 @@ def editUser():
         print (first_name, last_name, class_name, is_admin)
         db.updateUser(int(cardID), first_name, last_name, class_name, int(is_admin))
 
-        print("User updated with the following information")
-        print("    CardID: " + str(cardID))
-        print("      Name: " + first_name)
-        print("  LastName: " + last_name)
-        print("     Class: " + class_name)
-        print("     Admin: " + str(is_admin))
+        print("Användaren uppdaterades med följande information")
+        print("    KortNummer: " + str(cardID))
+        print("       Förnamn: " + first_name)
+        print("     Efternamn: " + last_name)
+        print("         Klass: " + class_name)
+        print(" Administratör: " + str(is_admin))
     
     except TypeError as e:
         print(e)
-        print("User not found")
-    input("Press enter to continue")
+        print("Användare fanns inte i systemet")
+    input("Tryck på [enter] för att fortsätta")
     clearScreen()
 
 def readCardNumber(message):
@@ -107,7 +107,7 @@ def readCardNumber(message):
     except ValueError:
         return -1
     clearScreen()
-    os.system("echo 'Thanks! I will go and look for card id: " + str(cardId) + "\'" + "| cowsay" )
+    os.system("echo 'Tack! Jag skall leta efter: " + str(cardId) + "\'" + "| cowsay" )
     time.sleep(3)
     tcflush(sys.stdin, TCIFLUSH)
     clearScreen()
@@ -115,19 +115,19 @@ def readCardNumber(message):
 
 def registerUserWithCardID(cardID):
     if(db.userExists(cardID)):
-        print("User with that cardID already exists, aborting \n")
+        print("Det finns redan en användare med det kortet.\n")
     else:
-        firstName = input("Enter first name:")
-        lastName = input("Enter last name:")
-        className = input("Enter class:")
+        firstName = input("  Förnamn: ")
+        lastName =  input("Efternamn: ")
+        className = input("    Klass: ")
         db.insertUser(cardID, firstName, lastName, className)
 
 def registerUser():
     cardID = -1
     while (cardID != 'q'):
-        cardID = readCardNumber("Enter cardID/scan card:")
+        cardID = readCardNumber("Visa kort: ") 
         if (cardID == -1):
-            print("Invalid cardID")
+            print("Ogiltigt kortnummer")
         elif (cardID != 'q'):
             registerUserWithCardID(cardID)
             return 1
@@ -143,26 +143,26 @@ def pruneCardIdInput(number):
 def timeLoggingLoop():
     while(1):
         clearScreen()
-        uid = readCardNumber("Enter a user ID to log time or q to quit:")
+        uid = readCardNumber("Visa kort för att tidsregistrera eller tryck Q för att avsluta: ")
         
-        if uid == 'q':
+        if uid == 'q' or uid == 'Q':
             break
         elif uid != -1:
             try:
                 logTime(uid)
             except TypeError as e: 
                 #print (e)
-                print ("No user with that card ID")
-                choice = input("Would you like to register a new user? (Y/n)")
+                print ("Ingen användare med det kortnummret")
+                choice = input("Vill du registrera en ny användare med det nummret? (Y/n)")
                 if (choice.lower() == "y" or choice == ""):
                     registerUserWithCardID(uid)
                     logTime(uid)
                 else:
                     continue
         else:
-            print("Invalid card ID\n")
+            print("Ogiltigt kortnummer\n")
         
-        input("Press enter to continue")
+        input("Tryck enter för att fortsätta")
 
 def logTime(uid):
     (cardID, first_name, last_name, _, _) = db.selectUserById(uid)
@@ -173,19 +173,19 @@ def logTime(uid):
             # does not allow time logs of 1 second or less
             # to stop users accidentally signing off
             if((datetime.now()-starttime).seconds < 30):
-                if(input("Are you sure you wish to logout? y/N") != 'y'):
+                if(input("Är du säker på att du vill logga ut? y/N") != 'y'):
                     return
             db.updateTimeLog(str(logID))
-            print("Time finished for " + first_name + " " + last_name
-                    + "\nTime gained: " + str(datetime.now()-starttime).split('.')[0])
+            print(first_name + " " + last_name + " stämplade ut"\
+                    + "\nDu var här i: " + str(datetime.now()-starttime).split('.')[0])
         else: 
             db.startTime(str(cardID))
-            print("Time started for " + first_name + " " + last_name 
-                    + " at " + datetime.now().strftime('%H:%M:%S'))
+            print(first_name + " " + last_name + " stämplade in"\
+                    + " klockan " + datetime.now().strftime('%H:%M:%S'))
     else: 
         db.startTime(str(cardID))
-        print("Time started for " + first_name + " " + last_name
-                + " at " + datetime.now().strftime('%H:%M:%S'))
+        print(first_name + " " + last_name + " stämplade in"\
+                + " klockan " + datetime.now().strftime('%H:%M:%S'))
 
 def toDecimalNumber(number):
     if(number.isdigit()):
