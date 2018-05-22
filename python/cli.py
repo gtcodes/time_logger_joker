@@ -10,6 +10,16 @@ from termios import tcflush, TCIFLUSH
 #ADMIN_PASS = "7bc738ff692641c00b8a9d013b42f23e1c1b794927d12c6d0941c1306d57960e"
 ADMIN_PASS = "ac7e43315375cea929bac587054782f379b535a479ca84635fdb4790cea39c7e"
 
+class colors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 def login():
     while(1):
         print("tidsstämpling avstängt. En lärare måste låsa upp systemet")
@@ -41,7 +51,7 @@ def isAdmin():
 
 def readId():
     while(1):
-        cmd = input("Vad vill du göra??\n"+
+        cmd = input("Vad vill du göra??\n" +
                     " t - Tidsstämpla\n" + 
                     " r - Registrera en ny användare\n" +
                     #" e - Edit a user\n" +
@@ -63,7 +73,7 @@ def readId():
             time.sleep(1.0)
             sys.exit(0)
         else:
-            print ("\nKände inte igen instruktionen, försök igen\n\n")
+            print (colors.FAIL + "\nKände inte igen instruktionen, försök igen\n\n" + colors.ENDC)
 
 def editUser():
     cardID = readCardNumber("Skanna kort för användaren som skall ändras: ")
@@ -152,7 +162,7 @@ def timeLoggingLoop():
                 logTime(uid)
             except TypeError as e: 
                 #print (e)
-                print ("Ingen användare med det kortnummret")
+                print (colors.WARNING + "Ingen användare med det kortnummret" + colors.ENDC)
                 choice = input("Vill du registrera en ny användare med det nummret? (Y/n)")
                 if (choice.lower() == "y" or choice == ""):
                     registerUserWithCardID(uid)
@@ -160,7 +170,7 @@ def timeLoggingLoop():
                 else:
                     continue
         else:
-            print("Ogiltigt kortnummer\n")
+            print(colors.FAIL + "Ogiltigt kortnummer\n" + colors.ENDC)
         
         input("Tryck enter för att fortsätta")
 
@@ -173,19 +183,19 @@ def logTime(uid):
             # does not allow time logs of 1 second or less
             # to stop users accidentally signing off
             if((datetime.now()-starttime).seconds < 30):
-                if(input("Är du säker på att du vill logga ut? y/N") != 'y'):
+                if(input(colors.WARNING + "Är du säker på att du vill logga ut? /N" + colors.ENDC) != 'y'):
                     return
             db.updateTimeLog(str(logID))
-            print(first_name + " " + last_name + " stämplade ut"\
-                    + "\nDu var här i: " + str(datetime.now()-starttime).split('.')[0])
+            print(colors.BLUE + first_name + " " + last_name + " stämplade ut"\
+                    + colors.BOLD + "\nDu var här i: " + str(datetime.now()-starttime).split('.')[0] + colors.ENDC)
         else: 
             db.startTime(str(cardID))
-            print(first_name + " " + last_name + " stämplade in"\
-                    + " klockan " + datetime.now().strftime('%H:%M:%S'))
+            print(colors.GREEN + first_name + " " + last_name + " stämplade in"\
+                    + colors.BOLD + " klockan " + datetime.now().strftime('%H:%M:%S') + colors.ENDC)
     else: 
         db.startTime(str(cardID))
-        print(first_name + " " + last_name + " stämplade in"\
-                + " klockan " + datetime.now().strftime('%H:%M:%S'))
+        print(colors.GREEN + first_name + " " + last_name + " stämplade in"\
+                + colors.BOLD + " klockan " + datetime.now().strftime('%H:%M:%S') + colors.ENDC)
 
 def toDecimalNumber(number):
     if(number.isdigit()):
