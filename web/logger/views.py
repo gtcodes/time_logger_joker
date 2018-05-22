@@ -63,6 +63,10 @@ def logs(request, request_card_id):
 def day(request, day):
     day = datetime.strptime(day,'%Y-%m-%d').replace(hour=0, minute=0, second=0, microsecond=0)
     searchResult = None
+    
+    # get information from database
+    log_list = Timelog.objects.all().filter(start_time__gt=day, start_time__lt=day+timedelta(days=1, seconds=-1))
+    
     if (request.POST.get('endAll') and request.user.is_authenticated):
         Timelog.objects.filter(end_time=None).update(end_time=F('start_time'))
     elif (request.POST.get('endToday') and request.user.is_authenticated):
@@ -74,11 +78,10 @@ def day(request, day):
         log.user = User.objects.get(card_id = request.POST.get('addLogId'))
         log.start_time = datetime.now()
         log.save()
+    elif (request.POST.get('filterClass')):
+        log_list = Timelog.objects.filter(start_time__gt=day, start_time__lt=day+timedelta(days=1, seconds=-1), user__class_field = request.POST.get('filterName'))
     else:
         redirect('%s?next=%s' % ('/admin/login/', request.path))
-
-    # get information from database
-    log_list = Timelog.objects.all().filter(start_time__gt=day, start_time__lt=day+timedelta(days=1, seconds=-1))
 
     # calculate total attendance
     logdict = {}

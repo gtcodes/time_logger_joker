@@ -19,6 +19,13 @@ Logs today
 </form>
 {% endif %}
 
+<form action="{% url 'day' day=today %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="filterName">
+    <input type="submit" class="btn" value="Filter Class" name="filterClass">
+    <input type="submit" class="btn" value="Remove filter">
+</form>
+
 {% load render_table from django_tables2 %}
 {% render_table table %}
 
