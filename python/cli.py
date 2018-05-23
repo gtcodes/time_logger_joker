@@ -51,7 +51,7 @@ def isAdmin():
 
 def readId():
     while(1):
-        cmd = input("Vad vill du göra??\n" +
+        cmd = input("Vad vill du göra?\n" +
                     " t - Tidsstämpla\n" + 
                     " r - Registrera en ny användare\n" +
                     #" e - Edit a user\n" +
@@ -183,7 +183,7 @@ def logTime(uid):
             # does not allow time logs of 1 second or less
             # to stop users accidentally signing off
             if((datetime.now()-starttime).seconds < 30):
-                if(input(colors.WARNING + "Är du säker på att du vill logga ut? /N" + colors.ENDC) != 'y'):
+                if(input(colors.WARNING + "Är du säker på att du vill logga ut? y/N" + colors.ENDC) != 'y'):
                     return
             db.updateTimeLog(str(logID))
             print(colors.BLUE + first_name + " " + last_name + " stämplade ut"\
