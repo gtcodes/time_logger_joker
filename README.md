@@ -25,3 +25,6 @@ To start the web interface
 * `r` to register a new user
 * `e` to edit a user
 you can at any time input q to either go back one step in the menu or quit the program
+
+## Admin usage
+* To change the competition start date, open  web/logger/models.py and edit the constant `COMPETITION_START`
